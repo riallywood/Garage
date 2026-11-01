@@ -1,0 +1,950 @@
+<title>Riallywood Collezione</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap">
+
+<style>
+/* ── Token system ── */
+:root {
+  --bg:        #0e0e10;
+  --bg2:       #1a1a1e;
+  --bg3:       #242428;
+  --border:    #2e2e34;
+  --fg:        #f0f0f2;
+  --fg2:       #9898a6;
+  --accent:    #e8c040;
+  --accent2:   #c8a030;
+  --mag:       #4ea8de;
+  --no-mag:    #666680;
+
+  --cat-gt:    #1e3a5f;
+  --cat-gt-fg: #7ec8f4;
+  --cat-f1:    #5f1e1e;
+  --cat-f1-fg: #f47c7c;
+  --cat-str:   #1e4a2a;
+  --cat-str-fg:#7ed49a;
+  --cat-wrc:   #3a1e5f;
+  --cat-wrc-fg:#b87ef4;
+  --cat-nas:   #5f3a1e;
+  --cat-nas-fg:#f4aa7c;
+  --cat-kar:   #2a2a2a;
+  --cat-kar-fg:#cccccc;
+
+  color-scheme: dark;
+  --font-display: 'Barlow Condensed', sans-serif;
+  --font-body:    'Barlow', sans-serif;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg:      #f5f4f0;
+    --bg2:     #ffffff;
+    --bg3:     #eeecea;
+    --border:  #d4d2cc;
+    --fg:      #18181c;
+    --fg2:     #5a5a6a;
+    --cat-gt:  #dbeeff;
+    --cat-gt-fg:#1a5080;
+    --cat-f1:  #ffe0e0;
+    --cat-f1-fg:#8b1010;
+    --cat-str: #dff4e8;
+    --cat-str-fg:#1a5c32;
+    --cat-wrc: #ecdeff;
+    --cat-wrc-fg:#5a1e8c;
+    --cat-nas: #ffedda;
+    --cat-nas-fg:#7c3a00;
+    --cat-kar: #e8e8e8;
+    --cat-kar-fg:#333333;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg:      #f5f4f0;
+  --bg2:     #ffffff;
+  --bg3:     #eeecea;
+  --border:  #d4d2cc;
+  --fg:      #18181c;
+  --fg2:     #5a5a6a;
+  --cat-gt:  #dbeeff;
+  --cat-gt-fg:#1a5080;
+  --cat-f1:  #ffe0e0;
+  --cat-f1-fg:#8b1010;
+  --cat-str: #dff4e8;
+  --cat-str-fg:#1a5c32;
+  --cat-wrc: #ecdeff;
+  --cat-wrc-fg:#5a1e8c;
+  --cat-nas: #ffedda;
+  --cat-nas-fg:#7c3a00;
+  --cat-kar: #e8e8e8;
+  --cat-kar-fg:#333333;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0 }
+html, body { height: 100%; font-family: var(--font-body); background: var(--bg); color: var(--fg) }
+
+/* ── Layout shell ── */
+#app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+/* ── Header ── */
+header {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 20;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 max(16px, env(safe-area-inset-left, 0px));
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  background: var(--bg);
+  z-index: 21;
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 52px;
+}
+.back-btn {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  cursor: pointer;
+  padding: 6px 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+.back-btn:hover { color: var(--accent2) }
+.back-btn svg { width: 16px; height: 16px; flex-shrink: 0 }
+.header-title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--fg);
+}
+.header-logo {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ── Search bar ── */
+.search-wrap {
+  padding: 10px 0 6px;
+}
+.search-input {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 14px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--fg);
+  outline: none;
+}
+.search-input::placeholder { color: var(--fg2) }
+.search-input:focus { border-color: var(--accent) }
+
+/* ── Filter bar ── */
+.filter-bar {
+  padding: 0 0 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.filter-row--col {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+.filter-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--fg2);
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 44px;
+}
+.filter-chips {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.chip {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  color: var(--fg2);
+  cursor: pointer;
+  transition: all .1s;
+  user-select: none;
+}
+.chip:hover { border-color: var(--accent); color: var(--accent) }
+.chip.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+}
+.chip.active-mag {
+  background: var(--mag);
+  border-color: var(--mag);
+  color: #fff;
+}
+
+/* ── Scroll content ── */
+#content {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-top: 8px;
+}
+
+/* ── Category grid ── */
+.cat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding-top: 4px;
+}
+.cat-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 16px 14px;
+  cursor: pointer;
+  transition: transform .12s, box-shadow .12s;
+  position: relative;
+  overflow: hidden;
+}
+.cat-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--c-fg);
+  opacity: .7;
+}
+.cat-card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,.3) }
+.cat-card:active { transform: scale(.97) }
+.cat-icon {
+  font-size: 28px;
+  margin-bottom: 10px;
+  display: block;
+}
+.cat-name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--c-fg);
+}
+.cat-count {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: var(--fg2);
+  margin-top: 3px;
+}
+
+/* ── Class list ── */
+.cls-list { display: flex; flex-direction: column; gap: 8px }
+.cls-item {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background .1s;
+}
+.cls-item:hover { background: var(--bg3) }
+.cls-item:active { opacity: .8 }
+.cls-name {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: .04em;
+}
+.cls-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cls-count {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg2);
+  background: var(--bg3);
+  border-radius: 20px;
+  padding: 2px 10px;
+}
+.cls-arrow { color: var(--fg2); font-size: 18px }
+
+/* ── Car list ── */
+.car-list { display: flex; flex-direction: column; gap: 6px }
+.car-item {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: background .1s;
+}
+.car-item:hover { background: var(--bg3) }
+.car-item:active { opacity: .8 }
+.car-mag-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.car-info { flex: 1; min-width: 0 }
+.car-name {
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.car-brand {
+  font-size: 12px;
+  color: var(--fg2);
+  margin-top: 2px;
+}
+.car-tr {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg2);
+  flex-shrink: 0;
+}
+.car-arrow { color: var(--border); font-size: 16px; flex-shrink: 0 }
+
+/* ── Car detail ── */
+.car-detail {}
+.car-detail-hero {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px 20px 20px;
+  margin-bottom: 16px;
+}
+.car-detail-name {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  line-height: 1.1;
+  text-wrap: balance;
+  margin-bottom: 6px;
+}
+.car-detail-brand {
+  font-size: 15px;
+  color: var(--fg2);
+  margin-bottom: 18px;
+}
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.badge {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  border-radius: 20px;
+  padding: 4px 12px;
+  border: 1px solid currentColor;
+}
+.badge-mag  { color: var(--mag);    border-color: var(--mag);    background: color-mix(in srgb, var(--mag) 12%, transparent) }
+.badge-nomag{ color: var(--no-mag); border-color: var(--no-mag); background: transparent }
+.badge-tr   { color: var(--accent); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent) }
+.badge-cls  { color: var(--c-fg,var(--fg2)); border-color: var(--c-fg,var(--fg2)); background: color-mix(in srgb, var(--c-fg,var(--fg2)) 10%, transparent) }
+
+/* ── Car photo ── */
+.car-photo-wrap {
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg3);
+  aspect-ratio: 16/9;
+  margin-bottom: 16px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.car-photo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.detail-section {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.detail-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--border);
+}
+.detail-row:last-child { border-bottom: none }
+.detail-label {
+  font-size: 13px;
+  color: var(--fg2);
+  font-weight: 500;
+}
+.detail-value {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: .03em;
+  text-align: right;
+}
+
+/* ── Empty state ── */
+.empty {
+  text-align: center;
+  padding: 48px 16px;
+  color: var(--fg2);
+}
+.empty-icon { font-size: 40px; margin-bottom: 12px }
+.empty-text { font-size: 15px }
+
+/* ── Count bar ── */
+.count-bar {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--fg2);
+  padding: 10px 0 8px;
+}
+</style>
+
+<div id="app">
+  <header>
+    <div class="header-inner" id="header-inner">
+      <span class="header-logo">Riallywood</span>
+    </div>
+    <div id="search-wrap" hidden>
+      <div class="search-wrap">
+        <input class="search-input" id="search-input" type="search" placeholder="Cerca auto…" autocomplete="off">
+      </div>
+      <div class="filter-bar" id="filter-bar">
+        <div class="filter-row">
+          <span class="filter-label">Magnete</span>
+          <div class="filter-chips" id="mag-chips">
+            <span class="chip active" data-mag="all">Tutti</span>
+            <span class="chip" data-mag="yes">Con magnete</span>
+            <span class="chip" data-mag="no">Senza magnete</span>
+          </div>
+        </div>
+        <div class="filter-row filter-row--col">
+          <span class="filter-label">TR</span>
+          <div class="filter-chips" id="tr-chips">
+            <span class="chip active" data-tr="all">Tutti</span>
+            <span class="chip" data-tr="16T">16T</span>
+            <span class="chip" data-tr="17T">17T</span>
+            <span class="chip" data-tr="18T">18T</span>
+            <span class="chip" data-tr="19T">19T</span>
+            <span class="chip" data-tr="20T">20T</span>
+            <span class="chip" data-tr="21T">21T</span>
+            <span class="chip" data-tr="22T">22T</span>
+            <span class="chip" data-tr="23T">23T</span>
+            <span class="chip" data-tr="24T">24T</span>
+            <span class="chip" data-tr="25T">25T</span>
+            <span class="chip" data-tr="26-30">26-30</span>
+            <span class="chip" data-tr="99 KO">KO</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div id="content"></div>
+</div>
+
+<script>
+// ── Data ─────────────────────────────────────────────────────────────────────
+const CARS = [{"name":"Ferrari F40","brand":"Slot.it","sottoclasse":"GT1 - Anni '90-2000","tr":"22T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":11.3},{"name":"BMW Mini Cooper","brand":"Hornby","sottoclasse":"Mini - Anni '00-'10","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19.5,"gomma_larg":8.5},{"name":"Subaru BRZ","brand":"Policar","sottoclasse":"Sportive e Supercars","tr":"19T","magnete":true,"category":"Stradali","gomma_diam":18,"gomma_larg":10},{"name":"Mini Challenge","brand":"Scalextric","sottoclasse":"Mini Challenge - Anni '90-'00","tr":"25T","magnete":false,"category":"Stradali","gomma_diam":19,"gomma_larg":8},{"name":"Lola MG","brand":"Hornby","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"17T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Tyrrel 019","brand":"Scalextric","sottoclasse":"F1 - Anni '80-'90","tr":"23T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Williams Saudia","brand":"Scalextric","sottoclasse":"F1 - Anni '80-'90","tr":"22T","magnete":false,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Audi R8 Crocodile #77 - Adelaide 2002","brand":"SCX","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"23T","magnete":false,"category":"GT Le Mans","anno":2002,"gomma_diam":21,"gomma_larg":11.5},{"name":"Maserati MC12 Superslot","brand":"Scalextric","sottoclasse":"GT1 - Anni '90-2000","tr":"19T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":11},{"name":"Ford Taurus","brand":"Hornby","sottoclasse":"Nascar - Anni '90-'00","tr":"22T","magnete":false,"category":"Nascar","gomma_diam":21,"gomma_larg":9},{"name":"Porsche 911 GT1-98 \"Marlboro/Shell\" #3","brand":"FLY","sottoclasse":"GT1 - Anni '90-2000","tr":"23T","magnete":false,"category":"GT Le Mans","anno":1998,"gomma_diam":19,"gomma_larg":10},{"name":"TVR Speed 12","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"18T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Lola MG","brand":"Hornby","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"17T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Ferrari LeMans 499","brand":"NonnoSlot","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"22T","magnete":false,"category":"GT Le Mans","anno":2024,"gomma_diam":20.5,"gomma_larg":11.5},{"name":"Williams ","brand":"Hornby","sottoclasse":"F1 - Anni '70-'80","tr":"18T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Porsche 917 #6 Sunoco","brand":"Polistil","sottoclasse":"GT Storiche - Anni '60-'80","tr":"26-30","magnete":false,"category":"GT Le Mans","anno":1973},{"name":" Toshiba Cadillac","brand":"Hornby","sottoclasse":"Group C - Anni '80-'90","tr":"17T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11},{"name":"Lotus Honda","brand":"Scalextric","sottoclasse":"F1 - Anni '80-'90","tr":"21T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Porsche 962C","brand":"Hornby","sottoclasse":"Group C - Anni '80-'90","tr":"25T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10.5},{"name":"Chevrolet Corvette L88","brand":"Hornby","sottoclasse":"Trans-Am - Anni '60-'70","tr":"21T","magnete":true,"category":"Stradali","gomma_diam":20.5,"gomma_larg":10},{"name":"Alfa Romeo","brand":"Polistil","sottoclasse":"F1 - Anni '70-'80","tr":"25T","magnete":true,"category":"F1"},{"name":"Porsche 934/935 \"Brumos Porsche\" #61","brand":"Ninco","sottoclasse":"GT Storiche - Anni '60-'80","tr":"25T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":10},{"name":"Corvette C6R","brand":"NSR","sottoclasse":"GT1 - Anni '90-2000","tr":"21T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":12},{"name":"Ford Taurus \"Unity Project.com\" #48 Union Jack","brand":"Hornby","sottoclasse":"Nascar - Anni '90-'00","tr":"22T","magnete":false,"category":"Nascar","gomma_diam":21,"gomma_larg":9},{"name":"Ferrari 512 BB JPS","brand":"FLY","sottoclasse":"GT Storiche - Anni '60-'80","tr":"18T","magnete":true,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":10},{"name":"Williams Rosberg","brand":"NonnoSlot","sottoclasse":"F1 - Anni '80-'90","tr":"21T","magnete":false,"category":"F1"},{"name":"F1 24 Orange","brand":"Policar ","sottoclasse":"F1 - Anni '2020","tr":"17T","magnete":true,"category":"F1","anno":2024,"gomma_diam":19,"gomma_larg":10},{"name":"Aston Martin James Bond","brand":"Carrera","sottoclasse":"Sportive e Supercars","tr":"23T","magnete":true,"category":"Stradali","gomma_diam":21,"gomma_larg":11.5},{"name":"Mosler MT900R #9 LeyJun","brand":"Ninco","sottoclasse":"GT1 - Anni '90-2000","tr":"19T","magnete":true,"category":"GT Le Mans","anno":2006,"gomma_diam":20,"gomma_larg":12},{"name":"Williams FW23","brand":"Hornby","sottoclasse":"F1 - Anni '90-'10","tr":"21T","magnete":true,"category":"F1","gomma_diam":21,"gomma_larg":11.5},{"name":"Mc Laren M7C","brand":"Hornby","sottoclasse":"F1 - Anni '70-'80","tr":"20T","magnete":true,"category":"F1","anno":1971,"gomma_diam":21,"gomma_larg":13.5},{"name":"Lotus Ford ","brand":"Hornby","sottoclasse":"F1 - Anni '70-'80","tr":"18T","magnete":true,"category":"F1","anno":1969,"gomma_diam":21,"gomma_larg":13.5},{"name":"Matra MS670 #25 Gitanes","brand":"Polistil","sottoclasse":"GT Storiche - Anni '60-'80","tr":"26-30","magnete":false,"category":"GT Le Mans","anno":1972},{"name":"Batmobile","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"17T","magnete":true,"category":"Stradali"},{"name":"Porsche  997","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"19T","magnete":true,"category":"Stradali","gomma_diam":20,"gomma_larg":10},{"name":"Renault R30","brand":"NonnoSlot","sottoclasse":"F1 - Anni '90-'10","tr":"21T","magnete":false,"category":"F1"},{"name":"Alfa Tipo 33","brand":"Fleishmann","sottoclasse":"GT Storiche - Anni '60-'80","tr":"26-30","magnete":true,"category":"GT Le Mans","gomma_diam":20.5,"gomma_larg":10},{"name":"Porsche 917K  3Dprint","brand":"Home Made","sottoclasse":"GT Storiche - Anni '60-'80","tr":"23T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10.5},{"name":"Mc Laren GTR","brand":"Scaleauto","sottoclasse":"GT1 - Anni '90-2000","tr":"22T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":12},{"name":"Porsche  911 GT 3R","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Brabham BT50 Patrese","brand":"NonnoSlot","sottoclasse":"F1 - Anni '80-'90","tr":"21T","magnete":false,"category":"F1","anno":1982},{"name":"Porsche 962","brand":"Scalextric","sottoclasse":"Group C - Anni '80-'90","tr":"25T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10.5},{"name":"Jaguar XJR9","brand":"Scalextric","sottoclasse":"Group C - Anni '80-'90","tr":"25T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10.5},{"name":"Porsche  911 GT 3R","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Maserati MC12 Team Sara","brand":"Scalextric","sottoclasse":"GT1 - Anni '90-2000","tr":"19T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":11},{"name":"Alfa GTA","brand":"RevoSlot","sottoclasse":"GT Storiche - Anni '60-'80","tr":"25T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10},{"name":"Toyota Takara","brand":"Scalextric","sottoclasse":"GT Storiche - Anni '60-'80","tr":"22T","magnete":false,"category":"GT Le Mans","gomma_diam":20.5,"gomma_larg":10},{"name":"Lotus 49","brand":"Ignota","sottoclasse":"F1 - Anni '50-'60","tr":"26-30","magnete":true,"category":"F1","gomma_diam":21,"gomma_larg":13.5},{"name":"Audi TT Gialla","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"17T","magnete":true,"category":"Stradali","gomma_diam":20,"gomma_larg":10},{"name":"BMW Mini Cooper","brand":"Hornby","sottoclasse":"Mini - Anni '00-'10","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19.5,"gomma_larg":8.5},{"name":"VW Beetle V2","brand":"Hornby","sottoclasse":"Beetle - Anni '70-'00","tr":"23T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Porsche  Boxter","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"18T","magnete":true,"category":"Stradali","gomma_diam":20,"gomma_larg":10},{"name":"Lotus JPS Nigel Mansell","brand":"NonnoSlot","sottoclasse":"F1 - Anni '80-'90","tr":"21T","magnete":false,"category":"F1"},{"name":"Ferrari F430","brand":"Hornby","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"18T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Maserati MC12 White","brand":"Scalextric","sottoclasse":"GT1 - Anni '90-2000","tr":"19T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":11},{"name":"Mini 1275 GT Red","brand":"Scalextric","sottoclasse":"Mini Challenge - Anni '90-'00","tr":"25T","magnete":false,"category":"Stradali"},{"name":"Opel Astra V8 DTM Coupe","brand":"Hornby","sottoclasse":"GT Storiche - Anni '60-'80","tr":"23T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":9.5},{"name":"Mc Laren Watson","brand":"NonnoSlot","sottoclasse":"F1 - Anni '80-'90","tr":"21T","magnete":false,"category":"F1"},{"name":"Lotus C7","brand":"Hornby","sottoclasse":"Caterham 7 - Anni '60-'80","tr":"21T","magnete":true,"category":"Stradali","gomma_diam":18.5,"gomma_larg":8},{"name":"Chevrolet Camaro GS","brand":"Hornby","sottoclasse":"Trans-Am - Anni '60-'70","tr":"17T","magnete":true,"category":"Stradali","gomma_diam":20.5,"gomma_larg":10},{"name":"Renault Megane","brand":"Ninco","sottoclasse":"Rally WRC - Anni '90-'00","tr":"99 KO","magnete":false,"category":"WRC","gomma_diam":19,"gomma_larg":10},{"name":"TVR T400R","brand":"Hornby","sottoclasse":"GT1 - Anni '90-2000","tr":"18T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Audi R8 LMS","brand":"Scalextric","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"18T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Mercedes Sauber C9","brand":"Hornby","sottoclasse":"Group C - Anni '80-'90","tr":"25T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10.5},{"name":"Subaru BRZ","brand":"Policar","sottoclasse":"Sportive e Supercars","tr":"19T","magnete":true,"category":"Stradali","gomma_diam":18,"gomma_larg":10},{"name":"Firestone ","brand":"Hornby","sottoclasse":"F1 - Anni '90-'10","tr":"22T","magnete":false,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Porsche  962C 85","brand":"Slot.it","sottoclasse":"Group C - Anni '80-'90","tr":"16T","magnete":true,"category":"GT Le Mans","anno":1987,"gomma_diam":18,"gomma_larg":10},{"name":"Mitsubishi Lancer","brand":"Ninco","sottoclasse":"Rally WRC - Anni '90-'00","tr":"23T","magnete":false,"category":"WRC","gomma_diam":20.5,"gomma_larg":8},{"name":"Porsche  911 GT 3R","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Porsche  911-GT1","brand":"Ninco","sottoclasse":"GT1 - Anni '90-2000","tr":"24T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":10},{"name":"Dallara Daytona DP","brand":"Sideways","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"22T","magnete":false,"category":"GT Le Mans","anno":2011,"gomma_diam":20.5,"gomma_larg":11.5},{"name":"Mc Laren MP4-12C","brand":"Hornby","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"20T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11},{"name":"Corvette C7R","brand":"NSR","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"21T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":12},{"name":"Matra MS670","brand":"Fleishmann","sottoclasse":"GT Storiche - Anni '60-'80","tr":"26-30","magnete":true,"category":"GT Le Mans","gomma_diam":20.5,"gomma_larg":10},{"name":"Chevrolet Corvette L88","brand":"Hornby","sottoclasse":"Trans-Am - Anni '60-'70","tr":"17T","magnete":true,"category":"Stradali","gomma_diam":20.5,"gomma_larg":10},{"name":"Aston Martin Vantage N24","brand":"SCX","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"19T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10},{"name":"Kart Rosso","brand":"Home Made","sottoclasse":"Go Kart","tr":"24T","magnete":false,"category":"Kart","gomma_diam":20,"gomma_larg":11.3},{"name":"Mosler MT 900 Playboy","brand":"NSR","sottoclasse":"GT1 - Anni '90-2000","tr":"21T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":12},{"name":"Camion Mercedes-Benz \"Bosch/Bild/Hermann Brave\" #14","brand":"GBtrack","sottoclasse":"","tr":"99 KO","magnete":false,"category":""},{"name":"F1 24 White","brand":"Policar ","sottoclasse":"F1 - Anni '2020","tr":"17T","magnete":true,"category":"F1","anno":2024,"gomma_diam":19,"gomma_larg":10},{"name":"Ferrari 330 P4","brand":"Hornby","sottoclasse":"GT Storiche - Anni '60-'80","tr":"24T","magnete":false,"category":"GT Le Mans","anno":1967,"gomma_diam":21,"gomma_larg":11.5},{"name":"BMW Mini Cooper","brand":"Hornby","sottoclasse":"Mini - Anni '00-'10","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19.5,"gomma_larg":8.5},{"name":"Lotus 72","brand":"Hornby","sottoclasse":"F1 - Anni '70-'80","tr":"18T","magnete":true,"category":"F1","gomma_diam":21,"gomma_larg":13.5},{"name":"Lotus C82","brand":"Scalextric","sottoclasse":"F1 - Anni '50-'60","tr":"26-30","magnete":true,"category":"F1"},{"name":"Benetton Ford B190","brand":"Hornby","sottoclasse":"F1 - Anni '80-'90","tr":"22T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Audi Sport Quattro Rothmans #9 - Acropolis Rally","brand":"FLY","sottoclasse":"Rally WRC - Anni '90-'00","tr":"23T","magnete":false,"category":"WRC","anno":1982,"gomma_diam":19,"gomma_larg":11},{"name":"Porsche  911 Philips","brand":"Ninco","sottoclasse":"Sportive e Supercars","tr":"24T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Audi R8C","brand":"Slot.it","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"17T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":11.3},{"name":"Nissan R90V","brand":"Slot.it","sottoclasse":"Group C - Anni '80-'90","tr":"16T","magnete":true,"category":"GT Le Mans","anno":1990,"gomma_diam":19,"gomma_larg":10},{"name":"Porsche  911 GT 3R","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Panoz LMP-1","brand":"FLY","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"19T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Dodge Viper GTS-R \"McCann Racing\" #82","brand":"Hornby","sottoclasse":"GT1 - Anni '90-2000","tr":"99 KO","magnete":false,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11},{"name":"Jaguar XJR-9","brand":"Scalextric","sottoclasse":"Group C - Anni '80-'90","tr":"25T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10.5},{"name":"Minardi ","brand":"Hornby","sottoclasse":"F1 - Anni '80-'90","tr":"22T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Ford GT40","brand":"NSR","sottoclasse":"GT Storiche - Anni '60-'80","tr":"21T","magnete":false,"category":"GT Le Mans","gomma_diam":20.5,"gomma_larg":10},{"name":"Ford Taurus","brand":"Hornby","sottoclasse":"Nascar - Anni '90-'00","tr":"22T","magnete":false,"category":"Nascar","gomma_diam":21,"gomma_larg":9},{"name":"Ferrari 330 P4","brand":"Hornby","sottoclasse":"GT Storiche - Anni '60-'80","tr":"24T","magnete":false,"category":"GT Le Mans","anno":1967,"gomma_diam":21,"gomma_larg":11.5},{"name":"JPS Renault","brand":"Scalextric","sottoclasse":"F1 - Anni '80-'90","tr":"22T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"VW Beetle G1","brand":"Hornby","sottoclasse":"Beetle - Anni '70-'00","tr":"23T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"BMW Mini Cooper","brand":"Hornby","sottoclasse":"Mini - Anni '00-'10","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19.5,"gomma_larg":8.5},{"name":"Mini 1275 GT","brand":"Scalextric","sottoclasse":"Mini Challenge - Anni '90-'00","tr":"25T","magnete":false,"category":"Stradali"},{"name":"TVR Speed12","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"18T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Sauber ","brand":"Slot.it","sottoclasse":"Group C - Anni '80-'90","tr":"17T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":11.3},{"name":"Mercedes ","brand":"Hornby","sottoclasse":"F1 - Anni '90-'10","tr":"22T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":11.5},{"name":"Mercedes CLR","brand":"NonnoSlot","sottoclasse":"GT1 - Anni '90-2000","tr":"21T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":10},{"name":"Porsche  997","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"19T","magnete":true,"category":"Stradali","gomma_diam":20,"gomma_larg":10},{"name":"Kart Bianco","brand":"Home Made","sottoclasse":"Go Kart","tr":"24T","magnete":false,"category":"Kart","gomma_diam":20,"gomma_larg":11.3},{"name":"Tyrrel 006","brand":"Hornby","sottoclasse":"F1 - Anni '70-'80","tr":"25T","magnete":true,"category":"F1","anno":1971,"gomma_diam":21,"gomma_larg":13.5},{"name":"Lotus C7","brand":"Hornby","sottoclasse":"Caterham 7 - Anni '60-'80","tr":"21T","magnete":true,"category":"Stradali","gomma_diam":18.5,"gomma_larg":8},{"name":"Lotus C7","brand":"Hornby","sottoclasse":"Caterham 7 - Anni '60-'80","tr":"21T","magnete":true,"category":"Stradali","gomma_diam":18.5,"gomma_larg":8},{"name":"Alfa Romeo Giulia Sprint GTAm Kent","brand":"RevoSlot","sottoclasse":"GT Storiche - Anni '60-'80","tr":"25T","magnete":false,"category":"GT Le Mans","anno":1971,"gomma_diam":20,"gomma_larg":10},{"name":"Panoz LMP 1","brand":"FLY","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"19T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Venturi MVS 600","brand":"FLY","sottoclasse":"GT1 - Anni '90-2000","tr":"23T","magnete":false,"category":"GT Le Mans","anno":1994,"gomma_diam":20,"gomma_larg":12},{"name":"Peugeot 307","brand":"Ninco","sottoclasse":"Rally WRC - Anni '90-'00","tr":"23T","magnete":false,"category":"WRC","gomma_diam":19,"gomma_larg":10},{"name":"Marcos 600 LM \"Repsol Locura Xbox\" #5","brand":"FLY","sottoclasse":"GT1 - Anni '90-2000","tr":"25T","magnete":false,"category":"GT Le Mans","gomma_diam":20.5,"gomma_larg":10.5},{"name":"Kart Nero","brand":"Home Made","sottoclasse":"Go Kart","tr":"24T","magnete":false,"category":"Kart","gomma_diam":20,"gomma_larg":11.3},{"name":"Corvette C6R","brand":"NSR","sottoclasse":"GT1 - Anni '90-2000","tr":"21T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":12},{"name":"Alfa 33/3","brand":"Slot.it","sottoclasse":"GT Storiche - Anni '60-'80","tr":"22T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10.5},{"name":"Porsche  Boxter","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"18T","magnete":true,"category":"Stradali","gomma_diam":20,"gomma_larg":10},{"name":"Ferrari F430","brand":"BBR Models","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"24T","magnete":false,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Lola MG","brand":"Hornby","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"17T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Renault Sport","brand":"Ninco","sottoclasse":"Rally WRC - Anni '90-'00","tr":"23T","magnete":false,"category":"WRC","gomma_diam":19,"gomma_larg":10},{"name":"AIR 9.8 TVR","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"18T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Porsche 997 GT2","brand":"Avant Slot","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"21T","magnete":false,"category":"GT Le Mans","anno":2006,"gomma_diam":19,"gomma_larg":10},{"name":" Brabham BT 26","brand":"Scalextric","sottoclasse":"F1 - Anni '50-'60","tr":"26-30","magnete":true,"category":"F1","gomma_diam":21,"gomma_larg":13.5},{"name":"Chevrolet Impala Kellogg ","brand":"Hornby","sottoclasse":"Nascar - Anni '90-'00","tr":"23T","magnete":false,"category":"Nascar","gomma_diam":21,"gomma_larg":9},{"name":"Porsche 956 \"Spirit of America\"","brand":"Slot.it","sottoclasse":"Group C - Anni '80-'90","tr":"25T","magnete":false,"category":"GT Le Mans","anno":1986,"gomma_diam":20,"gomma_larg":11.3},{"name":"Renault Megane","brand":"Hornby","sottoclasse":"Rally WRC - Anni '90-'00","tr":"22T","magnete":true,"category":"WRC","gomma_diam":19,"gomma_larg":10},{"name":"Opel Kadett GT/E","brand":"RevoSlot","sottoclasse":"GT Storiche - Anni '60-'80","tr":"25T","magnete":false,"category":"GT Le Mans","anno":1970,"gomma_diam":20,"gomma_larg":10},{"name":"Ford Mustang","brand":"Hornby","sottoclasse":"Trans-Am - Anni '60-'70","tr":"17T","magnete":true,"category":"Stradali","gomma_diam":20.5,"gomma_larg":10},{"name":"Mc Laren MP4 - 16","brand":"Hornby","sottoclasse":"F1 - Anni '90-'10","tr":"21T","magnete":true,"category":"F1","gomma_diam":21,"gomma_larg":11.5},{"name":"Mosler MT900R","brand":"NSR","sottoclasse":"GT1 - Anni '90-2000","tr":"21T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":12},{"name":"RCT","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":21,"gomma_larg":11.5},{"name":"Porsche 956/962","brand":"NonnoSlot","sottoclasse":"Group C - Anni '80-'90","tr":"22T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":10},{"name":"Lamborghini Gallardo","brand":"Ninco","sottoclasse":"Sportive e Supercars","tr":"22T","magnete":false,"category":"Stradali","anno":2008,"gomma_diam":20.5,"gomma_larg":10.5},{"name":"Porsche Moby Dick 935","brand":"Sideways","sottoclasse":"GT Storiche - Anni '60-'80","tr":"23T","magnete":false,"category":"GT Le Mans","anno":1978},{"name":"Maserati MC12 Vodafone","brand":"Scalextric","sottoclasse":"GT1 - Anni '90-2000","tr":"19T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":11},{"name":"Porsche  911 GT 3R","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"18T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Porsche 906 Carrera","brand":"Fleishmann","sottoclasse":"GT Storiche - Anni '60-'80","tr":"26-30","magnete":true,"category":"GT Le Mans","gomma_diam":20.5,"gomma_larg":10},{"name":"Joker","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"18T","magnete":true,"category":"Stradali","gomma_diam":20,"gomma_larg":13},{"name":"TVR RCT","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"99 KO","magnete":true,"category":"Stradali","gomma_diam":21,"gomma_larg":10.5},{"name":"Porsche 917","brand":"Scalextric","sottoclasse":"GT Storiche - Anni '60-'80","tr":"26-30","magnete":true,"category":"GT Le Mans"},{"name":"Nissan R90CK","brand":"NonnoSlot","sottoclasse":"Group C - Anni '80-'90","tr":"21T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":10},{"name":"Jaguar XJR9","brand":"Scalextric","sottoclasse":"Group C - Anni '80-'90","tr":"25T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10.5},{"name":"Benetton B193","brand":"Hornby","sottoclasse":"F1 - Anni '90-'10","tr":"23T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"BMW Mini Cooper","brand":"Hornby","sottoclasse":"Mini - Anni '00-'10","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19.5,"gomma_larg":8.5},{"name":"Panoz LMP 1","brand":"FLY","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"99 KO","magnete":true,"category":"GT Le Mans"},{"name":"Ferrari 312 PB CL","brand":"Sloter","sottoclasse":"GT Storiche - Anni '60-'80","tr":"20T","magnete":true,"category":"GT Le Mans","anno":1974,"gomma_diam":20.5,"gomma_larg":10.5},{"name":"Ferrari ","brand":"Hornby","sottoclasse":"F1 - Anni '90-'10","tr":"22T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Chevron B21","brand":"FLY","sottoclasse":"GT Storiche - Anni '60-'80","tr":"24T","magnete":true,"category":"GT Le Mans"},{"name":"Porsche 962C","brand":"Slot.it","sottoclasse":"Group C - Anni '80-'90","tr":"17T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":11.3},{"name":"Riley MK","brand":"Sideways","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"22T","magnete":false,"category":"GT Le Mans","anno":2009,"gomma_diam":20.5,"gomma_larg":11.5},{"name":"Corvette C6R","brand":"NSR","sottoclasse":"GT1 - Anni '90-2000","tr":"21T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":12},{"name":"BMW Mini Cooper S","brand":"Hornby","sottoclasse":"Mini - Anni '00-'10","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":18,"gomma_larg":10},{"name":"Nissan R390 GT1","brand":"Slot.it","sottoclasse":"GT1 - Anni '90-2000","tr":"22T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":10},{"name":"Corvette C6R","brand":"NSR","sottoclasse":"GT1 - Anni '90-2000","tr":"21T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":12},{"name":"Jaguar XKR GT3 #1 BFGoodrich","brand":"Scalextric","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"25T","magnete":false,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11},{"name":"Ferrari 312 PB","brand":"Sloter","sottoclasse":"GT Storiche - Anni '60-'80","tr":"20T","magnete":true,"category":"GT Le Mans","anno":1972,"gomma_diam":20,"gomma_larg":10},{"name":"Lola MG","brand":"Hornby","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"17T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Chevrolet Camaro GS","brand":"Hornby","sottoclasse":"Trans-Am - Anni '60-'70","tr":"17T","magnete":true,"category":"Stradali","anno":1969,"gomma_diam":20.5,"gomma_larg":10},{"name":"BMW Mini Cooper","brand":"Hornby","sottoclasse":"Mini - Anni '00-'10","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19.5,"gomma_larg":8.5},{"name":"Porsche  956 KH","brand":"Slot.it","sottoclasse":"Group C - Anni '80-'90","tr":"16T","magnete":true,"category":"GT Le Mans","anno":1983,"gomma_diam":18,"gomma_larg":10},{"name":"Pagani Huayra Drago","brand":"Scalextric","sottoclasse":"Sportive e Supercars","tr":"17T","magnete":true,"category":"Stradali","gomma_diam":21,"gomma_larg":11},{"name":"Jaguar XJR9 ","brand":"Slot.it","sottoclasse":"Group C - Anni '80-'90","tr":"22T","magnete":false,"category":"GT Le Mans","gomma_diam":20.5,"gomma_larg":10.5},{"name":"Chevrolet Impala","brand":"Hornby","sottoclasse":"Nascar - Anni '90-'00","tr":"22T","magnete":true,"category":"Nascar","gomma_diam":21,"gomma_larg":9},{"name":"Porsche 962","brand":"Scalextric","sottoclasse":"Group C - Anni '80-'90","tr":"25T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10.5},{"name":"SCX Tuning Series","brand":"SCX","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"24T","magnete":false,"category":"GT Le Mans"},{"name":"Chevrolet Camaro GS","brand":"Hornby","sottoclasse":"Trans-Am - Anni '60-'70","tr":"18T","magnete":true,"category":"Stradali","anno":1969,"gomma_diam":20.5,"gomma_larg":10},{"name":"VW Beetle Cabrio","brand":"Hornby","sottoclasse":"Beetle - Anni '70-'00","tr":"23T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Lola MG","brand":"Hornby","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"17T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Lola T280 Switzerland ","brand":"Sloter","sottoclasse":"GT Storiche - Anni '60-'80","tr":"20T","magnete":true,"category":"GT Le Mans","anno":1972,"gomma_diam":20.5,"gomma_larg":10.5},{"name":"Ferrari ","brand":"Pro Slot","sottoclasse":"F1 - Anni '90-'10","tr":"26-30","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Mini Challenge","brand":"Scalextric","sottoclasse":"Mini Challenge - Anni '90-'00","tr":"25T","magnete":false,"category":"Stradali","gomma_diam":19,"gomma_larg":8},{"name":"Ferrari F430","brand":"Hornby","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"18T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Porsche 962 CK6","brand":"Hornby","sottoclasse":"Group C - Anni '80-'90","tr":"25T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10.5},{"name":"Arrows","brand":"SCX","sottoclasse":"F1 - Anni '80-'90","tr":"21T","magnete":true,"category":"F1","gomma_diam":19.5,"gomma_larg":12},{"name":"Audi TT Rossa","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"17T","magnete":true,"category":"Stradali","gomma_diam":20,"gomma_larg":10},{"name":"VW Beetle G2","brand":"Hornby","sottoclasse":"Beetle - Anni '70-'00","tr":"23T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Renault ","brand":"Hornby","sottoclasse":"F1 - Anni '90-'10","tr":"22T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"TVR T400R","brand":"Hornby","sottoclasse":"GT1 - Anni '90-2000","tr":"18T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Chevrolet Corvette L88","brand":"Hornby","sottoclasse":"Trans-Am - Anni '60-'70","tr":"17T","magnete":true,"category":"Stradali","gomma_diam":20.5,"gomma_larg":10},{"name":"Skoda Fabia","brand":"Hornby","sottoclasse":"Rally WRC - Anni '90-'00","tr":"23T","magnete":false,"category":"WRC","gomma_diam":20.5,"gomma_larg":8},{"name":"Ferrari 330 P4","brand":"Hornby","sottoclasse":"GT Storiche - Anni '60-'80","tr":"24T","magnete":false,"category":"GT Le Mans","anno":1967,"gomma_diam":21,"gomma_larg":11.5},{"name":"Lola MG","brand":"Hornby","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"20T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Alfa Tipo 33","brand":"Fleishmann","sottoclasse":"GT Storiche - Anni '60-'80","tr":"26-30","magnete":true,"category":"GT Le Mans","gomma_diam":20.5,"gomma_larg":10},{"name":"Ferrari 330 P4","brand":"Hornby","sottoclasse":"GT Storiche - Anni '60-'80","tr":"24T","magnete":false,"category":"GT Le Mans","anno":1967,"gomma_diam":21,"gomma_larg":11.5},{"name":"Ferrari 312 PB CL","brand":"Sloter","sottoclasse":"GT Storiche - Anni '60-'80","tr":"20T","magnete":true,"category":"GT Le Mans","anno":1972,"gomma_diam":20.5,"gomma_larg":10.5},{"name":"Seat Cupra GT","brand":"SCX","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"24T","magnete":false,"category":"GT Le Mans"},{"name":"Pagani Zonda R","brand":"Slot.it","sottoclasse":"GT1 - Anni '90-2000","tr":"22T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":10},{"name":"Cooper C81","brand":"Scalextric","sottoclasse":"F1 - Anni '50-'60","tr":"26-30","magnete":true,"category":"F1"},{"name":"Ferrari 330 P4","brand":"Hornby","sottoclasse":"GT Storiche - Anni '60-'80","tr":"24T","magnete":false,"category":"GT Le Mans","anno":1967,"gomma_diam":21,"gomma_larg":11.5},{"name":"F1 24 Red","brand":"Policar ","sottoclasse":"F1 - Anni '2020","tr":"17T","magnete":true,"category":"F1","anno":2024,"gomma_diam":19,"gomma_larg":10},{"name":"Honda NSX JGTC \"EPSON PIAA Castrol\" #32","brand":"Ninco","sottoclasse":"GT1 - Anni '90-2000","tr":"25T","magnete":false,"category":"GT Le Mans","gomma_diam":20.5,"gomma_larg":10},{"name":"Ford Taurus","brand":"Hornby","sottoclasse":"Nascar - Anni '90-'00","tr":"22T","magnete":false,"category":"Nascar","gomma_diam":21,"gomma_larg":9},{"name":"VW Beetle V1","brand":"Hornby","sottoclasse":"Beetle - Anni '70-'00","tr":"23T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Benetton B195","brand":"Hornby","sottoclasse":"F1 - Anni '90-'10","tr":"23T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Mercedes 300 SLR","brand":"Slot.it","sottoclasse":"GT Storiche - Anni '60-'80","tr":"23T","magnete":false,"category":"GT Le Mans","gomma_diam":23,"gomma_larg":8},{"name":"BMW Mini Cooper","brand":"Hornby","sottoclasse":"Mini - Anni '00-'10","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19.5,"gomma_larg":8.5},{"name":"Chevron B21","brand":"FLY","sottoclasse":"GT Storiche - Anni '60-'80","tr":"20T","magnete":true,"category":"GT Le Mans","anno":1972,"gomma_diam":18,"gomma_larg":10},{"name":"Riley MK Aim Autosport","brand":"Sideways","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"22T","magnete":false,"category":"GT Le Mans","anno":2010,"gomma_diam":20.5,"gomma_larg":11.5},{"name":"Chevron B21 \"Tergal\" Red Rose Racing #5","brand":"GBtrack","sottoclasse":"GT Storiche - Anni '60-'80","tr":"24T","magnete":false,"category":"GT Le Mans","anno":1972},{"name":"Subaru BRZ","brand":"Policar","sottoclasse":"Sportive e Supercars","tr":"19T","magnete":true,"category":"Stradali","gomma_diam":18,"gomma_larg":10},{"name":"Aston Martin DBR9","brand":"Scalextric","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"19T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"BMW Mini Cooper","brand":"Hornby","sottoclasse":"Mini - Anni '00-'10","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19.5,"gomma_larg":8.5},{"name":"Corvette C8R","brand":"NSR","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"21T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":12},{"name":"Lola MG","brand":"Hornby","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"17T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Lotus C7","brand":"Hornby","sottoclasse":"Caterham 7 - Anni '60-'80","tr":"21T","magnete":true,"category":"Stradali","gomma_diam":18.5,"gomma_larg":8},{"name":"TVR Starco","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"18T","magnete":true,"category":"Stradali","gomma_diam":21,"gomma_larg":10.5},{"name":"McLaren GTR ","brand":"Scalextric","sottoclasse":"GT1 - Anni '90-2000","tr":"19T","magnete":true,"category":"GT Le Mans","anno":1995},{"name":"Lancia WRC 037","brand":"FLY","sottoclasse":"Rally WRC - Anni '90-'00","tr":"25T","magnete":true,"category":"WRC","gomma_diam":19,"gomma_larg":11},{"name":"Dallara Daytona DP","brand":"Sideways","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"22T","magnete":false,"category":"GT Le Mans","anno":2009,"gomma_diam":20.5,"gomma_larg":11.5},{"name":"Mosler MT900R #24 Perspective Racing (Daytona)","brand":"Ninco","sottoclasse":"GT1 - Anni '90-2000","tr":"23T","magnete":false,"category":"GT Le Mans","anno":2002,"gomma_diam":20,"gomma_larg":12},{"name":"Alfa Romeo 156 GTA Pearle","brand":"FLY","sottoclasse":"GT Storiche - Anni '60-'80","tr":"25T","magnete":false,"category":"GT Le Mans"},{"name":"VW Beetle","brand":"Hornby","sottoclasse":"Beetle - Anni '70-'00","tr":"23T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Mercedes CLK DTM AMG Vodafone #2","brand":"Hornby","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"24T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":10},{"name":"Porsche GT1 EVO \"Team Gunnar\" #6 Highcroft Racing","brand":"GBtrack","sottoclasse":"GT1 - Anni '90-2000","tr":"99 KO","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":10},{"name":"Lola MG","brand":"Spirit","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"21T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Williams FW10","brand":"Hornby","sottoclasse":"F1 - Anni '80-'90","tr":"23T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Lotus C7","brand":"Hornby","sottoclasse":"Caterham 7 - Anni '60-'80","tr":"21T","magnete":true,"category":"Stradali","gomma_diam":18.5,"gomma_larg":8},{"name":"Kart Blu","brand":"Home Made","sottoclasse":"Go Kart","tr":"24T","magnete":false,"category":"Kart","gomma_diam":20,"gomma_larg":11.3},{"name":"Lola T290","brand":"Sloter","sottoclasse":"GT Storiche - Anni '60-'80","tr":"20T","magnete":true,"category":"GT Le Mans","anno":1972,"gomma_diam":20.5,"gomma_larg":10.5},{"name":"Pagani Huayra Drago","brand":"Scalextric","sottoclasse":"Sportive e Supercars","tr":"17T","magnete":true,"category":"Stradali","gomma_diam":21,"gomma_larg":11},{"name":"Mc Laren ","brand":"Hornby","sottoclasse":"F1 - Anni '90-'10","tr":"22T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Renault Megane","brand":"Hornby","sottoclasse":"Rally WRC - Anni '90-'00","tr":"22T","magnete":true,"category":"WRC","gomma_diam":19,"gomma_larg":10},{"name":"Ford Focus","brand":"Hornby","sottoclasse":"Rally WRC - Anni '90-'00","tr":"23T","magnete":false,"category":"WRC","gomma_diam":20.5,"gomma_larg":8},{"name":"Mitsubishi Lancer","brand":"Ninco","sottoclasse":"Rally WRC - Anni '90-'00","tr":"23T","magnete":false,"category":"WRC","anno":2005,"gomma_diam":20.5,"gomma_larg":8},{"name":"Citroen Xsara T4","brand":"SCX","sottoclasse":"Rally WRC - Anni '90-'00","tr":"23T","magnete":false,"category":"WRC","gomma_diam":20.5,"gomma_larg":10.5},{"name":"Porsche wsc95 team Joest","brand":"FLY","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"19T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":12},{"name":"Ford Taurus","brand":"Hornby","sottoclasse":"Nascar - Anni '90-'00","tr":"22T","magnete":false,"category":"Nascar","gomma_diam":21,"gomma_larg":9},{"name":"Alfa Romeo TZ2","brand":"FLY","sottoclasse":"GT Storiche - Anni '60-'80","tr":"25T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":11},{"name":"Porsche 935 K3","brand":"FLY","sottoclasse":"GT Storiche - Anni '60-'80","tr":"23T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":11},{"name":"Toyota 88C","brand":"Slot.it","sottoclasse":"Group C - Anni '80-'90","tr":"16T","magnete":true,"category":"GT Le Mans","anno":1988,"gomma_diam":18,"gomma_larg":10},{"name":"Lola T280 V8","brand":"Sloter","sottoclasse":"GT Storiche - Anni '60-'80","tr":"20T","magnete":true,"category":"GT Le Mans","anno":1972,"gomma_diam":20.5,"gomma_larg":10.5},{"name":"Renault R25","brand":"Hornby","sottoclasse":"F1 - Anni '90-'10","tr":"21T","magnete":true,"category":"F1","gomma_diam":21,"gomma_larg":11.5},{"name":"Alfa Romeo Giulia sprint GTAm Kent","brand":"RevoSlot","sottoclasse":"GT Storiche - Anni '60-'80","tr":"25T","magnete":false,"category":"GT Le Mans","anno":1971,"gomma_diam":20,"gomma_larg":10},{"name":"Ferrari Pironi","brand":"NonnoSlot","sottoclasse":"F1 - Anni '80-'90","tr":"21T","magnete":false,"category":"F1"},{"name":"Renault Prost","brand":"NonnoSlot","sottoclasse":"F1 - Anni '80-'90","tr":"21T","magnete":false,"category":"F1"},{"name":"Nissan R390 GT1 Green","brand":"TeamSlot","sottoclasse":"GT1 - Anni '90-2000","tr":"23T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":10},{"name":"Subaru BRZ","brand":"Policar","sottoclasse":"Sportive e Supercars","tr":"19T","magnete":true,"category":"Stradali","gomma_diam":18,"gomma_larg":10},{"name":"Ford Taurus","brand":"Hornby","sottoclasse":"Nascar - Anni '90-'00","tr":"22T","magnete":false,"category":"Nascar","gomma_diam":21,"gomma_larg":9},{"name":"F1 24 Blu","brand":"Policar ","sottoclasse":"F1 - Anni '2020","tr":"17T","magnete":true,"category":"F1","anno":2024,"gomma_diam":19,"gomma_larg":10},{"name":"Mitsubishi Lancer","brand":"Hornby","sottoclasse":"Rally WRC - Anni '90-'00","tr":"23T","magnete":false,"category":"WRC","gomma_diam":20.5,"gomma_larg":8},{"name":"Audi TT Blu","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"17T","magnete":true,"category":"Stradali","gomma_diam":20,"gomma_larg":10},{"name":"Chevrolet Camaro GS","brand":"Hornby","sottoclasse":"Trans-Am - Anni '60-'70","tr":"19T","magnete":true,"category":"Stradali","anno":2014,"gomma_diam":20.5,"gomma_larg":10}];
+
+// ── Taxonomy ──────────────────────────────────────────────────────────────────
+const TAXONOMY = [
+  { id:'gt',  name:'GT Le Mans', icon:'🏁', vars:'--cat-gt',  classes:[
+    "GT Storiche - Anni '60-'80",
+    "GT1 - Anni '90-2000",
+    "GT Moderne '00 (gt2,gte,gt3, lmp)",
+    "Group C - Anni '80-'90",
+  ]},
+  { id:'f1',  name:'Formula 1',  icon:'🔴', vars:'--cat-f1',  classes:[
+    "F1 - Anni '50-'60",
+    "F1 - Anni '70-'80",
+    "F1 - Anni '80-'90",
+    "F1 - Anni '90-'10",
+    "F1 - Anni '2020",
+  ]},
+  { id:'str', name:'Stradali',   icon:'🚗', vars:'--cat-str', classes:[
+    "Trans-Am - Anni '60-'70",
+    "Caterham 7 - Anni '60-'80",
+    "Beetle - Anni '70-'00",
+    "Mini Challenge - Anni '90-'00",
+    "Sportive e Supercars",
+    "Mini - Anni '00-'10",
+  ]},
+  { id:'wrc', name:'WRC',        icon:'🌲', vars:'--cat-wrc', classes:["Rally WRC - Anni '90-'00"]},
+  { id:'nas', name:'NASCAR',     icon:'🏟', vars:'--cat-nas', classes:["Nascar - Anni '90-'00"]},
+  { id:'kar', name:'Kart',       icon:'🎯', vars:'--cat-kar', classes:['Go Kart']},
+];
+
+const CAT_BY_ID  = Object.fromEntries(TAXONOMY.map(c => [c.id, c]));
+const CAT_BY_CLS = {};
+TAXONOMY.forEach(cat => cat.classes.forEach(cls => CAT_BY_CLS[cls] = cat));
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let state = {
+  view: 'home',
+  catId: null,
+  cls: null,
+  carIdx: null,
+  search: '',
+  filterMag: 'all',      // 'all' | 'yes' | 'no'
+  filterTR: new Set(),   // empty = tutti
+};
+
+// ── Render ────────────────────────────────────────────────────────────────────
+const content     = document.getElementById('content');
+const headerInner = document.getElementById('header-inner');
+const searchWrap  = document.getElementById('search-wrap');
+const searchInput = document.getElementById('search-input');
+
+const TR_ORDER = ['16T','17T','18T','19T','20T','21T','22T','23T','24T','25T','26-30','99 KO'];
+function trRank(tr) {
+  const i = TR_ORDER.indexOf(tr);
+  return i >= 0 ? i : TR_ORDER.length;
+}
+function carSort(a, b) {
+  const t = trRank(a.tr) - trRank(b.tr);
+  if (t !== 0) return t;
+  const br = a.brand.localeCompare(b.brand, 'it');
+  if (br !== 0) return br;
+  return a.name.localeCompare(b.name, 'it');
+}
+function carsByClass(cls) {
+  return CARS.filter(c => c.sottoclasse === cls).sort(carSort);
+}
+function catCss(cat) {
+  return `style="--c-bg:var(${cat.vars}-bg,transparent);--c-fg:var(${cat.vars}-fg)"`;
+}
+
+// Apply magnet + TR filters to a car array
+function applyFilters(arr) {
+  return arr.filter(c => {
+    if (state.filterMag === 'yes' && !c.magnete) return false;
+    if (state.filterMag === 'no'  &&  c.magnete) return false;
+    if (state.filterTR.size > 0 && !state.filterTR.has(c.tr||'')) return false;
+    return true;
+  });
+}
+
+function render() {
+  const { view, catId, cls, carIdx, search } = state;
+
+  // Header
+  if (view === 'home' || view === 'search') {
+    headerInner.innerHTML = `<span class="header-logo">Riallywood</span>`;
+    searchWrap.hidden = false;
+    updateFilterChips();
+  } else if (view === 'classes') {
+    const cat = CAT_BY_ID[catId];
+    headerInner.innerHTML = `
+      <button class="back-btn" onclick="nav('home')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <path d="M10 3L5 8l5 5"/>
+        </svg>
+        Home
+      </button>
+      <span class="header-title">${cat.name}</span>`;
+    searchWrap.hidden = true;
+  } else if (view === 'cars') {
+    const cat = CAT_BY_CLS[cls];
+    headerInner.innerHTML = `
+      <button class="back-btn" onclick="nav('classes','${cat.id}')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <path d="M10 3L5 8l5 5"/>
+        </svg>
+        ${cat.name}
+      </button>
+      <span class="header-title">${cls.split(' - ')[0]}</span>`;
+    searchWrap.hidden = true;
+  } else if (view === 'car') {
+    const car = CARS[carIdx];
+    headerInner.innerHTML = `
+      <button class="back-btn" onclick="navToCarClass(${carIdx})">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <path d="M10 3L5 8l5 5"/>
+        </svg>
+        ${(car.sottoclasse||'').split(' - ')[0]}
+      </button>`;
+    searchWrap.hidden = true;
+  }
+
+  // Content
+  if (view === 'home' || view === 'search') {
+    if (search.trim().length > 1) {
+      renderSearch(search);
+    } else {
+      renderHome();
+    }
+  } else if (view === 'classes') {
+    renderClasses(catId);
+  } else if (view === 'cars') {
+    renderCars(cls);
+  } else if (view === 'car') {
+    renderCar(carIdx);
+  }
+}
+
+function updateFilterChips() {
+  // Magnete chips
+  document.querySelectorAll('#mag-chips .chip').forEach(chip => {
+    const val = chip.dataset.mag;
+    chip.className = 'chip' + (val === state.filterMag ? ' active-mag' : '');
+  });
+  // TR chips
+  document.querySelectorAll('#tr-chips .chip').forEach(chip => {
+    const val = chip.dataset.tr;
+    if (val === 'all') {
+      chip.className = 'chip' + (state.filterTR.size === 0 ? ' active' : '');
+    } else {
+      chip.className = 'chip' + (state.filterTR.has(val) ? ' active' : '');
+    }
+  });
+}
+
+function renderHome() {
+  let html = `<div class="cat-grid">`;
+  TAXONOMY.forEach(cat => {
+    const allInCat = CARS.filter(c => cat.classes.includes(c.sottoclasse));
+    const filtered = applyFilters(allInCat);
+    const total = allInCat.length;
+    html += `
+      <div class="cat-card" ${catCss(cat)} onclick="nav('classes','${cat.id}')">
+        <span class="cat-icon">${cat.icon}</span>
+        <div class="cat-name">${cat.name}</div>
+        <div class="cat-count">${filtered.length}${filtered.length!==total?'/'+total:''} auto</div>
+      </div>`;
+  });
+  html += `</div>`;
+  content.innerHTML = html;
+}
+
+// Registro globale cls→indice per evitare problemi con apostrofi negli onclick inline
+const CLS_INDEX = {};
+TAXONOMY.forEach(cat => cat.classes.forEach((cls, i) => CLS_INDEX[cls] = cls));
+
+function renderClasses(catId) {
+  const cat = CAT_BY_ID[catId];
+  // Salvo le classi in un array globale temporaneo accessibile dagli onclick
+  window.__clsMap = window.__clsMap || {};
+  let html = `<div class="cls-list">`;
+  cat.classes.forEach((cls, i) => {
+    const allCars = carsByClass(cls);
+    if (!allCars.length) return;
+    const filtered = applyFilters(allCars);
+    const key = catId + '_' + i;
+    window.__clsMap[key] = cls;
+    const countStr = filtered.length !== allCars.length
+      ? `${filtered.length}/${allCars.length}`
+      : `${allCars.length}`;
+    html += `
+      <div class="cls-item" onclick="navCls('${key}')">
+        <span class="cls-name">${cls}</span>
+        <div class="cls-meta">
+          <span class="cls-count">${countStr}</span>
+          <span class="cls-arrow">›</span>
+        </div>
+      </div>`;
+  });
+  html += `</div>`;
+  content.innerHTML = html;
+}
+
+function renderCars(cls) {
+  const allCars = carsByClass(cls);
+  const cars = applyFilters(allCars);
+  const countLabel = cars.length < allCars.length ? `${cars.length} di ${allCars.length} auto` : `${cars.length} auto`;
+  let html = `<div class="count-bar">${countLabel}</div><div class="car-list">`;
+  cars.forEach(car => {
+    const idx = CARS.indexOf(car);
+    const dotColor = car.magnete ? '#e53535' : '#3b82f6';
+    html += `
+      <div class="car-item" onclick="nav('car','','',${idx})">
+        <span class="car-mag-dot" style="background:${dotColor}" title="${car.magnete?'Con magnete':'Senza magnete'}"></span>
+        <div class="car-info">
+          <div class="car-name">${car.name}</div>
+          <div class="car-brand">${car.brand}</div>
+        </div>
+        <span class="car-tr">${car.tr||'—'}</span>
+        <span class="car-arrow">›</span>
+      </div>`;
+  });
+  html += `</div>`;
+  content.innerHTML = html;
+}
+
+function carPhotoSvg(car, cat) {
+  const catId = cat.id || 'gt';
+  const shapes = {
+    gt:  `<ellipse cx="200" cy="110" rx="140" ry="38" fill="currentColor" opacity=".18"/>
+          <path d="M80 110 Q100 72 160 66 Q200 60 240 66 Q300 72 320 110 Z" fill="currentColor" opacity=".55"/>
+          <rect x="72" y="108" width="256" height="22" rx="6" fill="currentColor" opacity=".7"/>
+          <circle cx="118" cy="134" r="18" fill="none" stroke="currentColor" stroke-width="6" opacity=".8"/>
+          <circle cx="282" cy="134" r="18" fill="none" stroke="currentColor" stroke-width="6" opacity=".8"/>
+          <circle cx="118" cy="134" r="8" fill="currentColor" opacity=".4"/>
+          <circle cx="282" cy="134" r="8" fill="currentColor" opacity=".4"/>`,
+    f1:  `<ellipse cx="200" cy="115" rx="150" ry="22" fill="currentColor" opacity=".15"/>
+          <path d="M60 115 Q80 88 130 82 L200 78 L270 82 Q320 88 340 115 Z" fill="currentColor" opacity=".5"/>
+          <rect x="55" y="113" width="290" height="14" rx="4" fill="currentColor" opacity=".75"/>
+          <rect x="140" y="78" width="120" height="28" rx="4" fill="currentColor" opacity=".3"/>
+          <circle cx="105" cy="130" r="16" fill="none" stroke="currentColor" stroke-width="5" opacity=".8"/>
+          <circle cx="295" cy="130" r="16" fill="none" stroke="currentColor" stroke-width="5" opacity=".8"/>
+          <path d="M50 108 L60 115 M340 115 L350 108" stroke="currentColor" stroke-width="8" stroke-linecap="round" opacity=".6"/>`,
+    str: `<ellipse cx="200" cy="112" rx="135" ry="34" fill="currentColor" opacity=".16"/>
+          <path d="M85 112 Q110 80 160 72 L200 70 L240 72 Q290 80 315 112 Z" fill="currentColor" opacity=".5"/>
+          <rect x="78" y="110" width="244" height="20" rx="5" fill="currentColor" opacity=".72"/>
+          <circle cx="122" cy="133" r="17" fill="none" stroke="currentColor" stroke-width="5" opacity=".8"/>
+          <circle cx="278" cy="133" r="17" fill="none" stroke="currentColor" stroke-width="5" opacity=".8"/>`,
+    wrc: `<ellipse cx="200" cy="112" rx="130" ry="32" fill="currentColor" opacity=".16"/>
+          <path d="M90 112 Q112 80 160 74 L200 72 L240 74 Q288 80 310 112 Z" fill="currentColor" opacity=".5"/>
+          <rect x="82" y="110" width="236" height="20" rx="4" fill="currentColor" opacity=".7"/>
+          <rect x="92" y="96" width="216" height="6" rx="3" fill="currentColor" opacity=".25"/>
+          <circle cx="126" cy="133" r="16" fill="none" stroke="currentColor" stroke-width="5" opacity=".8"/>
+          <circle cx="274" cy="133" r="16" fill="none" stroke="currentColor" stroke-width="5" opacity=".8"/>`,
+    nas: `<ellipse cx="200" cy="113" rx="145" ry="36" fill="currentColor" opacity=".14"/>
+          <path d="M75 113 Q95 76 155 68 L200 66 L245 68 Q305 76 325 113 Z" fill="currentColor" opacity=".48"/>
+          <rect x="68" y="111" width="264" height="24" rx="4" fill="currentColor" opacity=".7"/>
+          <circle cx="115" cy="138" r="19" fill="none" stroke="currentColor" stroke-width="6" opacity=".8"/>
+          <circle cx="285" cy="138" r="19" fill="none" stroke="currentColor" stroke-width="6" opacity=".8"/>`,
+    kar: `<ellipse cx="200" cy="120" rx="110" ry="22" fill="currentColor" opacity=".16"/>
+          <rect x="110" y="100" width="180" height="18" rx="4" fill="currentColor" opacity=".55"/>
+          <rect x="90" y="116" width="220" height="12" rx="3" fill="currentColor" opacity=".7"/>
+          <circle cx="120" cy="132" r="14" fill="none" stroke="currentColor" stroke-width="5" opacity=".8"/>
+          <circle cx="280" cy="132" r="14" fill="none" stroke="currentColor" stroke-width="5" opacity=".8"/>
+          <rect x="186" y="96" width="28" height="6" rx="3" fill="currentColor" opacity=".4"/>`,
+  };
+  const shape = shapes[catId] || shapes.gt;
+  const colorVar = cat.vars ? `var(${cat.vars}-fg)` : 'var(--fg2)';
+  const bgVar    = cat.vars ? `var(${cat.vars})` : 'var(--bg3)';
+  return `
+    <div class="car-photo-wrap" style="background:${bgVar}">
+      <svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%;height:100%;color:${colorVar}">
+        ${shape}
+        <text x="200" y="170" text-anchor="middle" font-family="'Barlow Condensed',sans-serif"
+              font-size="11" font-weight="600" letter-spacing="2" fill="currentColor" opacity=".35"
+              text-transform="uppercase">${car.brand.toUpperCase()}</text>
+      </svg>
+    </div>`;
+}
+
+function renderCar(idx) {
+  const car = CARS[idx];
+  const cat = CAT_BY_CLS[car.sottoclasse] || {};
+  const catCssStr = cat.vars ? `style="--c-fg:var(${cat.vars}-fg)"` : '';
+  const magColor = car.magnete ? '#e53535' : '#3b82f6';
+  const gomme = (car.gomma_diam && car.gomma_larg)
+    ? `⌀ ${car.gomma_diam} mm · L ${car.gomma_larg} mm`
+    : car.gomma_diam ? `⌀ ${car.gomma_diam} mm` : '—';
+  const html = `
+    <div class="car-detail">
+      <div class="car-detail-hero">
+        <div class="car-detail-name">${car.name}</div>
+        <div class="car-detail-brand">${car.brand}</div>
+        <div class="badge-row">
+          <span class="badge" style="background:${magColor};color:#fff">${car.magnete ? 'Con magnete' : 'Senza magnete'}</span>
+          ${car.tr ? `<span class="badge badge-tr">${car.tr}</span>` : ''}
+          ${car.sottoclasse ? `<span class="badge badge-cls" ${catCssStr}>${car.sottoclasse}</span>` : ''}
+        </div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-row">
+          <span class="detail-label">Produttore</span>
+          <span class="detail-value">${car.brand}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Classe</span>
+          <span class="detail-value">${car.sottoclasse||'—'}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Categoria</span>
+          <span class="detail-value">${cat.name||'—'}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Pignone (TR)</span>
+          <span class="detail-value">${car.tr||'—'}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Magnete</span>
+          <span class="detail-value" style="color:${magColor};font-weight:600">
+            ${car.magnete ? '● Sì' : '● No'}
+          </span>
+        </div>
+        ${car.anno ? `<div class="detail-row">
+          <span class="detail-label">Anno</span>
+          <span class="detail-value">${car.anno}</span>
+        </div>` : ''}
+        <div class="detail-row">
+          <span class="detail-label">Gomme</span>
+          <span class="detail-value">${gomme}</span>
+        </div>
+      </div>
+    </div>`;
+  content.innerHTML = html;
+}
+
+function renderSearch(q) {
+  const lq = q.toLowerCase();
+  let results = CARS.filter(c =>
+    c.name.toLowerCase().includes(lq) ||
+    c.brand.toLowerCase().includes(lq) ||
+    (c.sottoclasse||'').toLowerCase().includes(lq)
+  );
+  results = applyFilters(results).sort((a,b) => a.name.localeCompare(b.name));
+
+  if (!results.length) {
+    content.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><div class="empty-text">Nessun risultato per "${q}"</div></div>`;
+    return;
+  }
+
+  let html = `<div class="count-bar">${results.length} risultat${results.length===1?'o':'i'}</div><div class="car-list">`;
+  results.forEach(car => {
+    const idx = CARS.indexOf(car);
+    const dotColor = car.magnete ? '#e53535' : '#3b82f6';
+    html += `
+      <div class="car-item" onclick="nav('car','','',${idx})">
+        <span class="car-mag-dot" style="background:${dotColor}"></span>
+        <div class="car-info">
+          <div class="car-name">${car.name}</div>
+          <div class="car-brand">${car.brand} · ${car.sottoclasse||'—'}</div>
+        </div>
+        <span class="car-tr">${car.tr||'—'}</span>
+        <span class="car-arrow">›</span>
+      </div>`;
+  });
+  html += `</div>`;
+  content.innerHTML = html;
+}
+
+// ── Navigation ────────────────────────────────────────────────────────────────
+function navCls(key) {
+  const cls = window.__clsMap[key];
+  if (!cls) return;
+  nav('cars', '', cls);
+}
+function navToCarClass(idx) {
+  const car = CARS[idx];
+  nav('cars', '', car.sottoclasse);
+}
+
+function nav(view, catId, cls, carIdx) {
+  state.view = view;
+  if (catId !== undefined && catId !== 'undefined' && catId !== 'null' && catId !== '') state.catId = catId;
+  if (cls !== undefined && cls !== 'undefined' && cls !== 'null') state.cls = cls ? decodeURIComponent(cls) : null;
+  if (carIdx !== undefined && carIdx !== 'undefined' && carIdx !== 'null') state.carIdx = (carIdx !== null && carIdx !== '') ? Number(carIdx) : null;
+  if (view === 'home') { state.search = ''; if (searchInput) searchInput.value = ''; }
+  content.scrollTop = 0;
+  render();
+}
+
+// ── Filter interactions ───────────────────────────────────────────────────────
+document.getElementById('mag-chips').addEventListener('click', e => {
+  const chip = e.target.closest('.chip');
+  if (!chip) return;
+  state.filterMag = chip.dataset.mag;
+  render();
+});
+
+document.getElementById('tr-chips').addEventListener('click', e => {
+  const chip = e.target.closest('.chip');
+  if (!chip) return;
+  const val = chip.dataset.tr;
+  if (val === 'all') {
+    state.filterTR.clear();
+  } else {
+    if (state.filterTR.has(val)) {
+      state.filterTR.delete(val);
+    } else {
+      state.filterTR.add(val);
+    }
+  }
+  render();
+});
+
+// Search
+searchInput.addEventListener('input', e => {
+  state.search = e.target.value;
+  state.view = state.search.trim().length > 1 ? 'search' : 'home';
+  render();
+});
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+render();
+</script>
