@@ -54,11 +54,11 @@ h2{font-size:17px;margin:16px 4px 4px}.hint{color:var(--mut);font-size:13px;marg
 <h2>Costruisci una gara</h2><div class="hint">Filtra e vedi quanto sono omogenee le auto selezionate.</div>
 <div class="row"><div><label>Categoria</label><select id="gcl"></select></div></div>
 <div class="row hide" id="gscw"><div class="scw"><label id="gsct"></label><div class="chips" id="gsc"></div></div></div>
-<div class="row3"><div><label>Magnete</label><select id="gmg"><option value="">Tutti</option><option value="1">Con</option><option value="0">Senza</option></select></div><div><label>Giri/min min</label><input id="gr1" type="number" inputmode="numeric" placeholder="es. 18000"></div><div><label>Giri/min max</label><input id="gr2" type="number" inputmode="numeric" placeholder="es. 22000"></div></div>
+<div class="row3"><div><label>Magnete</label><select id="gmg"><option value="">Tutti</option><option value="1">Con</option><option value="0">Senza</option></select></div><div><label>Luci</label><select id="glu"><option value="">Tutte</option><option value="1">Con luci</option><option value="0">Senza luci</option></select></div><div><label>Anni</label><select id="gan"></select></div></div>
 <div class="row"><div style="grid-column:1/-1"><label>TR (tempo) – scegline uno</label><div class="chips" id="gtr"></div></div><div><label>&nbsp;</label><label style="display:flex;gap:8px;align-items:center;font-size:15px;color:var(--ink);padding:10px 4px"><input id="gadj" type="checkbox" style="width:22px;height:22px"> includi adiacenti (±1)</label></div></div>
 <div class="row"><div><label>Produttore</label><select id="gmk"></select></div><div><label>Motore</label><select id="gmo"></select></div></div>
 <div id="gres"></div>
-<h2>Gruppi suggeriti</h2><div class="hint">Gruppi con almeno 4 auto, ordinati per omogeneità (stessa classe, magnete, motore, giri, TR).</div>
+<h2>Gruppi suggeriti</h2><div class="hint">Gruppi con almeno 4 auto, ordinati per omogeneità (stessa classe, magnete, motore, TR).</div>
 <div id="gsug"></div>
 </section>
 </div>
@@ -80,7 +80,7 @@ const mkList=uniq(cars.map(c=>c.mk)),moList=uniq(cars.flatMap(c=>c.mo));
 function opts(sel,items,all){$(sel).innerHTML=`<option value="">${all}</option>`+items.map(i=>Array.isArray(i)?`<option value="${esc(i[0])}">${esc(i[1])}</option>`:`<option>${esc(i)}</option>`).join("")}
 const clOpts=ORD.filter(k=>cars.some(c=>c.cl===k)).map(k=>[k,CL[k]+` (${cars.filter(c=>c.cl===k).length})`]);
 const catList=uniq(cars.map(c=>c.cat));["#fcl","#gcl"].forEach(s=>opts(s,catList.map(k=>[k,k+" ("+cars.filter(c=>c.cat===k).length+")"]),"Tutte"));
-["#fmk","#gmk"].forEach(s=>opts(s,mkList,"Tutti"));opts("#gmo",moList,"Tutti");["#ftr","#gtr"].forEach(s=>{const el=$(s);el.dataset.v="";const items=[["","Tutti"]].concat(trLabels.map(x=>[x,x]));
+["#fmk","#gmk"].forEach(s=>opts(s,mkList,"Tutti"));opts("#gmo",moList,"Tutti");{const lab={"50":"Anni '50","60":"Anni '60","70":"Anni '70","80":"Anni '80","90":"Anni '90","00":"Anni 2000","10":"Anni 2010","20":"Anni 2020"};opts("#gan",["50","60","70","80","90","00","10","20"].filter(k=>cars.some(c=>c.pe.includes(k))).map(k=>[k,lab[k]+" ("+cars.filter(c=>c.pe.includes(k)).length+")"]),"Tutti")}["#ftr","#gtr"].forEach(s=>{const el=$(s);el.dataset.v="";const items=[["","Tutti"]].concat(trLabels.map(x=>[x,x]));
  el.innerHTML=items.map(([v,l])=>`<button type="button" data-v="${esc(v)}" class="${v===""?"on":""}">${esc(l)}${v?` <small>${cars.filter(c=>c.tr===v).length}</small>`:""}</button>`).join("");
  el.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;el.dataset.v=b.dataset.v;el.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));el.dispatchEvent(new Event("input"))})});
 $("#sub").textContent=cars.length+" auto · "+cars.filter(c=>c.mg).length+" con magnete · "+cars.filter(c=>c.teca).length+" in teca · copia dati del "+D.date;
@@ -90,7 +90,7 @@ function match(c,f){
  if(f.q){const h=(c.n+" "+c.mk+" "+c.pil+" "+c.col+" "+c.sub+" "+c.gm+" "+c.num).toLowerCase();if(!f.q.toLowerCase().split(/\s+/).every(w=>h.includes(w)))return 0}
  if(f.cl&&c.cat!==f.cl)return 0;if(f.cls&&f.cls.length&&!f.cls.includes(c.cl))return 0;if(f.mk&&c.mk!==f.mk)return 0;
  if(f.mg!==""&&f.mg!==undefined&&String(c.mg)!==f.mg)return 0;
- if(f.te!==undefined&&f.te!==""&&String(c.teca)!==f.te)return 0;if(f.mo&&!c.mo.includes(f.mo))return 0;
+ if(f.te!==undefined&&f.te!==""&&String(c.teca)!==f.te)return 0;if(f.lu!==undefined&&f.lu!==""&&String(c.luci)!==f.lu)return 0;if(f.an&&!c.pe.includes(f.an))return 0;if(f.mo&&!c.mo.includes(f.mo))return 0;
  if(f.r1&&!(c.rpm&&c.rpm>=f.r1))return 0;if(f.r2&&!(c.rpm&&c.rpm<=f.r2))return 0;return 1}
 
 // secondo livello: classi della categoria scelta (selezione multipla, nessuna = tutte)
@@ -149,12 +149,12 @@ function homog(a){ // 0-100
  return Math.max(0,Math.round(s))}
 const scCls=s=>s>=75?"":s>=55?"mid":"low";
 function gareRes(){
- const f={cl:$("#gcl").value,cls:getCls("g"),mg:$("#gmg").value,mk:$("#gmk").value,mo:$("#gmo").value,tr:$("#gtr").dataset.v||"",adj:$("#gadj").checked,r1:+$("#gr1").value||0,r2:+$("#gr2").value||0};
+ const f={cl:$("#gcl").value,cls:getCls("g"),mg:$("#gmg").value,mk:$("#gmk").value,mo:$("#gmo").value,tr:$("#gtr").dataset.v||"",adj:$("#gadj").checked,lu:$("#glu").value,an:$("#gan").value};
  const r=cars.filter(c=>match(c,f));
  if(!r.length){$("#gres").innerHTML=`<div class="sug">Nessuna auto con questi filtri.</div>`;return}
  const rp=r.filter(c=>c.rpm).map(c=>c.rpm),h=homog(r);
- $("#gres").innerHTML=`<div class="sug"><b>${r.length} auto · omogeneità <span class="sc ${scCls(h)}">${h}/100</span></b><span class="hint">${rp.length?`giri ${Math.min(...rp)}–${Math.max(...rp)} · `:""}${r.filter(c=>c.mg).length} con magnete · ${new Set(r.map(c=>c.mk)).size} produttori</span></div>`+r.sort((a,b)=>trKey(a)-trKey(b)||(a.rpm||0)-(b.rpm||0)).map(row).join("")}
-["#gcl","#gsc","#gmg","#gmk","#gmo","#gr1","#gr2","#gtr","#gadj"].forEach(s=>$(s).addEventListener("input",gareRes));
+ $("#gres").innerHTML=`<div class="sug"><b>${r.length} auto · omogeneità <span class="sc ${scCls(h)}">${h}/100</span></b><span class="hint">${r.filter(c=>c.mg).length} con magnete · ${new Set(r.map(c=>c.mk)).size} produttori</span></div>`+r.sort((a,b)=>trKey(a)-trKey(b)||(a.rpm||0)-(b.rpm||0)).map(row).join("")}
+["#gcl","#gsc","#gmg","#gmk","#gmo","#glu","#gan","#gtr","#gadj"].forEach(s=>$(s).addEventListener("input",gareRes));
 function suggest(){
  const out=[],seen=new Set();
  const add=(label,a,set)=>{if(a.length<4)return;const k=a.map(c=>c.id).sort().join();if(seen.has(k))return;seen.add(k);out.push({label,a,h:homog(a),set})};
