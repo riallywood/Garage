@@ -1,950 +1,176 @@
-<title>Riallywood Collezione</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap">
-
+<!DOCTYPE html>
+<html lang="it"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Collezione Slot Car</title>
 <style>
-/* ── Token system ── */
-:root {
-  --bg:        #0e0e10;
-  --bg2:       #1a1a1e;
-  --bg3:       #242428;
-  --border:    #2e2e34;
-  --fg:        #f0f0f2;
-  --fg2:       #9898a6;
-  --accent:    #e8c040;
-  --accent2:   #c8a030;
-  --mag:       #4ea8de;
-  --no-mag:    #666680;
-
-  --cat-gt:    #1e3a5f;
-  --cat-gt-fg: #7ec8f4;
-  --cat-f1:    #5f1e1e;
-  --cat-f1-fg: #f47c7c;
-  --cat-str:   #1e4a2a;
-  --cat-str-fg:#7ed49a;
-  --cat-wrc:   #3a1e5f;
-  --cat-wrc-fg:#b87ef4;
-  --cat-nas:   #5f3a1e;
-  --cat-nas-fg:#f4aa7c;
-  --cat-kar:   #2a2a2a;
-  --cat-kar-fg:#cccccc;
-
-  color-scheme: dark;
-  --font-display: 'Barlow Condensed', sans-serif;
-  --font-body:    'Barlow', sans-serif;
-}
-
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
-    --bg:      #f5f4f0;
-    --bg2:     #ffffff;
-    --bg3:     #eeecea;
-    --border:  #d4d2cc;
-    --fg:      #18181c;
-    --fg2:     #5a5a6a;
-    --cat-gt:  #dbeeff;
-    --cat-gt-fg:#1a5080;
-    --cat-f1:  #ffe0e0;
-    --cat-f1-fg:#8b1010;
-    --cat-str: #dff4e8;
-    --cat-str-fg:#1a5c32;
-    --cat-wrc: #ecdeff;
-    --cat-wrc-fg:#5a1e8c;
-    --cat-nas: #ffedda;
-    --cat-nas-fg:#7c3a00;
-    --cat-kar: #e8e8e8;
-    --cat-kar-fg:#333333;
-    color-scheme: light;
-  }
-}
-:root[data-theme="light"] {
-  --bg:      #f5f4f0;
-  --bg2:     #ffffff;
-  --bg3:     #eeecea;
-  --border:  #d4d2cc;
-  --fg:      #18181c;
-  --fg2:     #5a5a6a;
-  --cat-gt:  #dbeeff;
-  --cat-gt-fg:#1a5080;
-  --cat-f1:  #ffe0e0;
-  --cat-f1-fg:#8b1010;
-  --cat-str: #dff4e8;
-  --cat-str-fg:#1a5c32;
-  --cat-wrc: #ecdeff;
-  --cat-wrc-fg:#5a1e8c;
-  --cat-nas: #ffedda;
-  --cat-nas-fg:#7c3a00;
-  --cat-kar: #e8e8e8;
-  --cat-kar-fg:#333333;
-  color-scheme: light;
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0 }
-html, body { height: 100%; font-family: var(--font-body); background: var(--bg); color: var(--fg) }
-
-/* ── Layout shell ── */
-#app {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  max-width: 560px;
-  margin: 0 auto;
-}
-
-/* ── Header ── */
-header {
-  position: sticky;
-  top: env(safe-area-inset-top, 0px);
-  z-index: 20;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  padding: 0 max(16px, env(safe-area-inset-left, 0px));
-}
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0 0 auto;
-  height: env(safe-area-inset-top, 0px);
-  background: var(--bg);
-  z-index: 21;
-}
-.header-inner {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  height: 52px;
-}
-.back-btn {
-  background: none;
-  border: none;
-  color: var(--accent);
-  font-family: var(--font-display);
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: .04em;
-  cursor: pointer;
-  padding: 6px 0;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  flex-shrink: 0;
-}
-.back-btn:hover { color: var(--accent2) }
-.back-btn svg { width: 16px; height: 16px; flex-shrink: 0 }
-.header-title {
-  font-family: var(--font-display);
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: var(--fg);
-}
-.header-logo {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-/* ── Search bar ── */
-.search-wrap {
-  padding: 10px 0 6px;
-}
-.search-input {
-  width: 100%;
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 9px 14px;
-  font-family: var(--font-body);
-  font-size: 15px;
-  color: var(--fg);
-  outline: none;
-}
-.search-input::placeholder { color: var(--fg2) }
-.search-input:focus { border-color: var(--accent) }
-
-/* ── Filter bar ── */
-.filter-bar {
-  padding: 0 0 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.filter-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-.filter-row--col {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-}
-.filter-label {
-  font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: var(--fg2);
-  white-space: nowrap;
-  flex-shrink: 0;
-  min-width: 44px;
-}
-.filter-chips {
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
-}
-.chip {
-  font-family: var(--font-display);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: .04em;
-  padding: 4px 10px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  background: var(--bg3);
-  color: var(--fg2);
-  cursor: pointer;
-  transition: all .1s;
-  user-select: none;
-}
-.chip:hover { border-color: var(--accent); color: var(--accent) }
-.chip.active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #000;
-}
-.chip.active-mag {
-  background: var(--mag);
-  border-color: var(--mag);
-  color: #fff;
-}
-
-/* ── Scroll content ── */
-#content {
-  flex: 1;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
-  padding-top: 8px;
-}
-
-/* ── Category grid ── */
-.cat-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  padding-top: 4px;
-}
-.cat-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 18px 16px 14px;
-  cursor: pointer;
-  transition: transform .12s, box-shadow .12s;
-  position: relative;
-  overflow: hidden;
-}
-.cat-card::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: var(--c-fg);
-  opacity: .7;
-}
-.cat-card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,.3) }
-.cat-card:active { transform: scale(.97) }
-.cat-icon {
-  font-size: 28px;
-  margin-bottom: 10px;
-  display: block;
-}
-.cat-name {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: .05em;
-  text-transform: uppercase;
-  color: var(--c-fg);
-}
-.cat-count {
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: .04em;
-  color: var(--fg2);
-  margin-top: 3px;
-}
-
-/* ── Class list ── */
-.cls-list { display: flex; flex-direction: column; gap: 8px }
-.cls-item {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 14px 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transition: background .1s;
-}
-.cls-item:hover { background: var(--bg3) }
-.cls-item:active { opacity: .8 }
-.cls-name {
-  font-family: var(--font-display);
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: .04em;
-}
-.cls-meta {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.cls-count {
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--fg2);
-  background: var(--bg3);
-  border-radius: 20px;
-  padding: 2px 10px;
-}
-.cls-arrow { color: var(--fg2); font-size: 18px }
-
-/* ── Car list ── */
-.car-list { display: flex; flex-direction: column; gap: 6px }
-.car-item {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  transition: background .1s;
-}
-.car-item:hover { background: var(--bg3) }
-.car-item:active { opacity: .8 }
-.car-mag-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.car-info { flex: 1; min-width: 0 }
-.car-name {
-  font-size: 14px;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.car-brand {
-  font-size: 12px;
-  color: var(--fg2);
-  margin-top: 2px;
-}
-.car-tr {
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--fg2);
-  flex-shrink: 0;
-}
-.car-arrow { color: var(--border); font-size: 16px; flex-shrink: 0 }
-
-/* ── Car detail ── */
-.car-detail {}
-.car-detail-hero {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px 20px 20px;
-  margin-bottom: 16px;
-}
-.car-detail-name {
-  font-family: var(--font-display);
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: .04em;
-  line-height: 1.1;
-  text-wrap: balance;
-  margin-bottom: 6px;
-}
-.car-detail-brand {
-  font-size: 15px;
-  color: var(--fg2);
-  margin-bottom: 18px;
-}
-.badge-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.badge {
-  font-family: var(--font-display);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  border-radius: 20px;
-  padding: 4px 12px;
-  border: 1px solid currentColor;
-}
-.badge-mag  { color: var(--mag);    border-color: var(--mag);    background: color-mix(in srgb, var(--mag) 12%, transparent) }
-.badge-nomag{ color: var(--no-mag); border-color: var(--no-mag); background: transparent }
-.badge-tr   { color: var(--accent); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent) }
-.badge-cls  { color: var(--c-fg,var(--fg2)); border-color: var(--c-fg,var(--fg2)); background: color-mix(in srgb, var(--c-fg,var(--fg2)) 10%, transparent) }
-
-/* ── Car photo ── */
-.car-photo-wrap {
-  border-radius: 12px;
-  overflow: hidden;
-  background: var(--bg3);
-  aspect-ratio: 16/9;
-  margin-bottom: 16px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.car-photo-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.detail-section {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-  margin-bottom: 12px;
-}
-.detail-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 13px 18px;
-  border-bottom: 1px solid var(--border);
-}
-.detail-row:last-child { border-bottom: none }
-.detail-label {
-  font-size: 13px;
-  color: var(--fg2);
-  font-weight: 500;
-}
-.detail-value {
-  font-family: var(--font-display);
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: .03em;
-  text-align: right;
-}
-
-/* ── Empty state ── */
-.empty {
-  text-align: center;
-  padding: 48px 16px;
-  color: var(--fg2);
-}
-.empty-icon { font-size: 40px; margin-bottom: 12px }
-.empty-text { font-size: 15px }
-
-/* ── Count bar ── */
-.count-bar {
-  font-family: var(--font-display);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  color: var(--fg2);
-  padding: 10px 0 8px;
-}
-</style>
-
-<div id="app">
-  <header>
-    <div class="header-inner" id="header-inner">
-      <span class="header-logo">Riallywood</span>
-    </div>
-    <div id="search-wrap" hidden>
-      <div class="search-wrap">
-        <input class="search-input" id="search-input" type="search" placeholder="Cerca auto…" autocomplete="off">
-      </div>
-      <div class="filter-bar" id="filter-bar">
-        <div class="filter-row">
-          <span class="filter-label">Magnete</span>
-          <div class="filter-chips" id="mag-chips">
-            <span class="chip active" data-mag="all">Tutti</span>
-            <span class="chip" data-mag="yes">Con magnete</span>
-            <span class="chip" data-mag="no">Senza magnete</span>
-          </div>
-        </div>
-        <div class="filter-row filter-row--col">
-          <span class="filter-label">TR</span>
-          <div class="filter-chips" id="tr-chips">
-            <span class="chip active" data-tr="all">Tutti</span>
-            <span class="chip" data-tr="16T">16T</span>
-            <span class="chip" data-tr="17T">17T</span>
-            <span class="chip" data-tr="18T">18T</span>
-            <span class="chip" data-tr="19T">19T</span>
-            <span class="chip" data-tr="20T">20T</span>
-            <span class="chip" data-tr="21T">21T</span>
-            <span class="chip" data-tr="22T">22T</span>
-            <span class="chip" data-tr="23T">23T</span>
-            <span class="chip" data-tr="24T">24T</span>
-            <span class="chip" data-tr="25T">25T</span>
-            <span class="chip" data-tr="26-30">26-30</span>
-            <span class="chip" data-tr="99 KO">KO</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
-  <div id="content"></div>
+:root{--bg:#f4f1ec;--card:#fff;--ink:#1d1d1f;--mut:#6b6b70;--acc:#c8102e;--line:#e3ded6;--ok:#2d7a3e}
+@media(prefers-color-scheme:dark){:root{--bg:#161618;--card:#222226;--ink:#f2f2f4;--mut:#9a9aa2;--line:#33333a;--acc:#ff4d63;--ok:#5fcf7a}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font:16px/1.4 -apple-system,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:env(safe-area-inset-top) 0 calc(70px + env(safe-area-inset-bottom))}
+header{padding:14px 16px 6px}h1{margin:0;font-size:22px}header small{color:var(--mut)}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:5}
+nav button{flex:1;padding:12px 4px;border:0;background:none;color:var(--mut);font-size:13px;font-weight:600}
+nav button.on{color:var(--acc)}
+.wrap{padding:8px 12px;max-width:900px;margin:auto}
+input,select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font-size:16px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:8px 0}
+label{font-size:12px;color:var(--mut);display:block;margin:0 0 3px 2px}
+.car{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:8px 0;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.car b{display:block}.car span{color:var(--mut);font-size:13px}
+.tag{display:inline-block;font-size:11px;padding:2px 7px;border-radius:99px;background:var(--line);margin:2px 3px 0 0;color:var(--ink)}
+.tag.m{background:var(--ok);color:#fff}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10;display:none}
+.sheet.on{display:block}
+.sheet>div{position:absolute;bottom:0;left:0;right:0;max-height:88%;overflow:auto;background:var(--card);border-radius:18px 18px 0 0;padding:16px 16px calc(24px + env(safe-area-inset-bottom));max-width:700px;margin:auto}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:4px 10px;font-size:15px;margin:10px 0}.kv i{color:var(--mut);font-style:normal}
+a.btn,button.btn{display:block;text-align:center;padding:12px;border-radius:10px;background:var(--acc);color:#fff;text-decoration:none;font-weight:600;border:0;width:100%;margin-top:10px;font-size:16px}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:12px;overflow:hidden;font-size:14px;margin:8px 0}
+th,td{padding:8px 6px;text-align:right;border-bottom:1px solid var(--line)}th:first-child,td:first-child{text-align:left}th{font-size:12px;color:var(--mut)}
+tfoot td{font-weight:700}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:8px 0}.kpi{background:var(--card);border-radius:12px;padding:10px;text-align:center;border:1px solid var(--line)}.kpi b{font-size:22px;display:block}.kpi span{font-size:11px;color:var(--mut)}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;display:flex;margin-top:4px}.bar i{display:block;background:var(--ok)}
+h2{font-size:17px;margin:16px 4px 4px}.hint{color:var(--mut);font-size:13px;margin:2px 4px 8px}
+.sug{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:8px 0}
+.sug b{display:block}.sug button{margin-top:6px;border:1px solid var(--acc);color:var(--acc);background:none;border-radius:8px;padding:6px 12px;font-size:14px}
+.sc{display:inline-block;font-size:12px;padding:2px 8px;border-radius:99px;color:#fff;background:var(--ok)}
+.sc.mid{background:#c98a00}.sc.low{background:#b33}
+.hide{display:none}
+.scw{grid-column:1/-1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}.scw label{margin-bottom:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chips button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:8px 13px;font-size:15px}.chips button.on{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}.chips small{opacity:.7}
+</style></head><body>
+<header><h1>🏁 Collezione Slot Car</h1><small id="sub"></small></header>
+<div class="wrap">
+<section id="t-auto">
+<input id="q" type="search" placeholder="Cerca auto, pilota, produttore, colore…">
+<div class="row"><div><label>Categoria</label><select id="fcl"></select></div><div><label>Produttore</label><select id="fmk"></select></div></div>
+<div class="row hide" id="fscw"><div class="scw"><label id="fsct"></label><div class="chips" id="fsc"></div></div></div>
+<div class="row"><div><label>Magnete</label><select id="fmg"><option value="">Tutti</option><option value="1">Con</option><option value="0">Senza</option></select></div><div><label>Teca</label><select id="fte"><option value="">Tutte</option><option value="1">Con teca</option><option value="0">Senza teca</option></select></div></div>
+<div class="row"><div style="grid-column:1/-1"><label>TR (tempo) – scegline uno</label><div class="chips" id="ftr"></div></div><div style="grid-column:1/-1"><label>&nbsp;</label><label style="display:flex;gap:8px;align-items:center;font-size:15px;color:var(--ink);padding:10px 4px"><input id="fadj" type="checkbox" style="width:22px;height:22px"> includi adiacenti (±1)</label></div></div>
+<div class="hint" id="cnt"></div><div id="list"></div>
+</section>
+<section id="t-stat" class="hide"></section>
+<section id="t-gare" class="hide">
+<h2>Costruisci una gara</h2><div class="hint">Filtra e vedi quanto sono omogenee le auto selezionate.</div>
+<div class="row"><div><label>Categoria</label><select id="gcl"></select></div></div>
+<div class="row hide" id="gscw"><div class="scw"><label id="gsct"></label><div class="chips" id="gsc"></div></div></div>
+<div class="row3"><div><label>Magnete</label><select id="gmg"><option value="">Tutti</option><option value="1">Con</option><option value="0">Senza</option></select></div><div><label>Giri/min min</label><input id="gr1" type="number" inputmode="numeric" placeholder="es. 18000"></div><div><label>Giri/min max</label><input id="gr2" type="number" inputmode="numeric" placeholder="es. 22000"></div></div>
+<div class="row"><div style="grid-column:1/-1"><label>TR (tempo) – scegline uno</label><div class="chips" id="gtr"></div></div><div><label>&nbsp;</label><label style="display:flex;gap:8px;align-items:center;font-size:15px;color:var(--ink);padding:10px 4px"><input id="gadj" type="checkbox" style="width:22px;height:22px"> includi adiacenti (±1)</label></div></div>
+<div class="row"><div><label>Produttore</label><select id="gmk"></select></div><div><label>Motore</label><select id="gmo"></select></div></div>
+<div id="gres"></div>
+<h2>Gruppi suggeriti</h2><div class="hint">Gruppi con almeno 4 auto, ordinati per omogeneità (stessa classe, magnete, motore, giri, TR).</div>
+<div id="gsug"></div>
+</section>
 </div>
-
+<div class="sheet" id="sh"><div id="shc"></div></div>
+<nav><button data-t="auto" class="on">🚗 Auto</button><button data-t="stat">📊 Statistiche</button><button data-t="gare">🏆 Gare</button></nav>
 <script>
-// ── Data ─────────────────────────────────────────────────────────────────────
-const CARS = [{"name":"Ferrari F40","brand":"Slot.it","sottoclasse":"GT1 - Anni '90-2000","tr":"22T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":11.3},{"name":"BMW Mini Cooper","brand":"Hornby","sottoclasse":"Mini - Anni '00-'10","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19.5,"gomma_larg":8.5},{"name":"Subaru BRZ","brand":"Policar","sottoclasse":"Sportive e Supercars","tr":"19T","magnete":true,"category":"Stradali","gomma_diam":18,"gomma_larg":10},{"name":"Mini Challenge","brand":"Scalextric","sottoclasse":"Mini Challenge - Anni '90-'00","tr":"25T","magnete":false,"category":"Stradali","gomma_diam":19,"gomma_larg":8},{"name":"Lola MG","brand":"Hornby","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"17T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Tyrrel 019","brand":"Scalextric","sottoclasse":"F1 - Anni '80-'90","tr":"23T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Williams Saudia","brand":"Scalextric","sottoclasse":"F1 - Anni '80-'90","tr":"22T","magnete":false,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Audi R8 Crocodile #77 - Adelaide 2002","brand":"SCX","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"23T","magnete":false,"category":"GT Le Mans","anno":2002,"gomma_diam":21,"gomma_larg":11.5},{"name":"Maserati MC12 Superslot","brand":"Scalextric","sottoclasse":"GT1 - Anni '90-2000","tr":"19T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":11},{"name":"Ford Taurus","brand":"Hornby","sottoclasse":"Nascar - Anni '90-'00","tr":"22T","magnete":false,"category":"Nascar","gomma_diam":21,"gomma_larg":9},{"name":"Porsche 911 GT1-98 \"Marlboro/Shell\" #3","brand":"FLY","sottoclasse":"GT1 - Anni '90-2000","tr":"23T","magnete":false,"category":"GT Le Mans","anno":1998,"gomma_diam":19,"gomma_larg":10},{"name":"TVR Speed 12","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"18T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Lola MG","brand":"Hornby","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"17T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Ferrari LeMans 499","brand":"NonnoSlot","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"22T","magnete":false,"category":"GT Le Mans","anno":2024,"gomma_diam":20.5,"gomma_larg":11.5},{"name":"Williams ","brand":"Hornby","sottoclasse":"F1 - Anni '70-'80","tr":"18T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Porsche 917 #6 Sunoco","brand":"Polistil","sottoclasse":"GT Storiche - Anni '60-'80","tr":"26-30","magnete":false,"category":"GT Le Mans","anno":1973},{"name":" Toshiba Cadillac","brand":"Hornby","sottoclasse":"Group C - Anni '80-'90","tr":"17T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11},{"name":"Lotus Honda","brand":"Scalextric","sottoclasse":"F1 - Anni '80-'90","tr":"21T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Porsche 962C","brand":"Hornby","sottoclasse":"Group C - Anni '80-'90","tr":"25T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10.5},{"name":"Chevrolet Corvette L88","brand":"Hornby","sottoclasse":"Trans-Am - Anni '60-'70","tr":"21T","magnete":true,"category":"Stradali","gomma_diam":20.5,"gomma_larg":10},{"name":"Alfa Romeo","brand":"Polistil","sottoclasse":"F1 - Anni '70-'80","tr":"25T","magnete":true,"category":"F1"},{"name":"Porsche 934/935 \"Brumos Porsche\" #61","brand":"Ninco","sottoclasse":"GT Storiche - Anni '60-'80","tr":"25T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":10},{"name":"Corvette C6R","brand":"NSR","sottoclasse":"GT1 - Anni '90-2000","tr":"21T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":12},{"name":"Ford Taurus \"Unity Project.com\" #48 Union Jack","brand":"Hornby","sottoclasse":"Nascar - Anni '90-'00","tr":"22T","magnete":false,"category":"Nascar","gomma_diam":21,"gomma_larg":9},{"name":"Ferrari 512 BB JPS","brand":"FLY","sottoclasse":"GT Storiche - Anni '60-'80","tr":"18T","magnete":true,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":10},{"name":"Williams Rosberg","brand":"NonnoSlot","sottoclasse":"F1 - Anni '80-'90","tr":"21T","magnete":false,"category":"F1"},{"name":"F1 24 Orange","brand":"Policar ","sottoclasse":"F1 - Anni '2020","tr":"17T","magnete":true,"category":"F1","anno":2024,"gomma_diam":19,"gomma_larg":10},{"name":"Aston Martin James Bond","brand":"Carrera","sottoclasse":"Sportive e Supercars","tr":"23T","magnete":true,"category":"Stradali","gomma_diam":21,"gomma_larg":11.5},{"name":"Mosler MT900R #9 LeyJun","brand":"Ninco","sottoclasse":"GT1 - Anni '90-2000","tr":"19T","magnete":true,"category":"GT Le Mans","anno":2006,"gomma_diam":20,"gomma_larg":12},{"name":"Williams FW23","brand":"Hornby","sottoclasse":"F1 - Anni '90-'10","tr":"21T","magnete":true,"category":"F1","gomma_diam":21,"gomma_larg":11.5},{"name":"Mc Laren M7C","brand":"Hornby","sottoclasse":"F1 - Anni '70-'80","tr":"20T","magnete":true,"category":"F1","anno":1971,"gomma_diam":21,"gomma_larg":13.5},{"name":"Lotus Ford ","brand":"Hornby","sottoclasse":"F1 - Anni '70-'80","tr":"18T","magnete":true,"category":"F1","anno":1969,"gomma_diam":21,"gomma_larg":13.5},{"name":"Matra MS670 #25 Gitanes","brand":"Polistil","sottoclasse":"GT Storiche - Anni '60-'80","tr":"26-30","magnete":false,"category":"GT Le Mans","anno":1972},{"name":"Batmobile","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"17T","magnete":true,"category":"Stradali"},{"name":"Porsche  997","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"19T","magnete":true,"category":"Stradali","gomma_diam":20,"gomma_larg":10},{"name":"Renault R30","brand":"NonnoSlot","sottoclasse":"F1 - Anni '90-'10","tr":"21T","magnete":false,"category":"F1"},{"name":"Alfa Tipo 33","brand":"Fleishmann","sottoclasse":"GT Storiche - Anni '60-'80","tr":"26-30","magnete":true,"category":"GT Le Mans","gomma_diam":20.5,"gomma_larg":10},{"name":"Porsche 917K  3Dprint","brand":"Home Made","sottoclasse":"GT Storiche - Anni '60-'80","tr":"23T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10.5},{"name":"Mc Laren GTR","brand":"Scaleauto","sottoclasse":"GT1 - Anni '90-2000","tr":"22T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":12},{"name":"Porsche  911 GT 3R","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Brabham BT50 Patrese","brand":"NonnoSlot","sottoclasse":"F1 - Anni '80-'90","tr":"21T","magnete":false,"category":"F1","anno":1982},{"name":"Porsche 962","brand":"Scalextric","sottoclasse":"Group C - Anni '80-'90","tr":"25T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10.5},{"name":"Jaguar XJR9","brand":"Scalextric","sottoclasse":"Group C - Anni '80-'90","tr":"25T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10.5},{"name":"Porsche  911 GT 3R","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Maserati MC12 Team Sara","brand":"Scalextric","sottoclasse":"GT1 - Anni '90-2000","tr":"19T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":11},{"name":"Alfa GTA","brand":"RevoSlot","sottoclasse":"GT Storiche - Anni '60-'80","tr":"25T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10},{"name":"Toyota Takara","brand":"Scalextric","sottoclasse":"GT Storiche - Anni '60-'80","tr":"22T","magnete":false,"category":"GT Le Mans","gomma_diam":20.5,"gomma_larg":10},{"name":"Lotus 49","brand":"Ignota","sottoclasse":"F1 - Anni '50-'60","tr":"26-30","magnete":true,"category":"F1","gomma_diam":21,"gomma_larg":13.5},{"name":"Audi TT Gialla","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"17T","magnete":true,"category":"Stradali","gomma_diam":20,"gomma_larg":10},{"name":"BMW Mini Cooper","brand":"Hornby","sottoclasse":"Mini - Anni '00-'10","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19.5,"gomma_larg":8.5},{"name":"VW Beetle V2","brand":"Hornby","sottoclasse":"Beetle - Anni '70-'00","tr":"23T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Porsche  Boxter","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"18T","magnete":true,"category":"Stradali","gomma_diam":20,"gomma_larg":10},{"name":"Lotus JPS Nigel Mansell","brand":"NonnoSlot","sottoclasse":"F1 - Anni '80-'90","tr":"21T","magnete":false,"category":"F1"},{"name":"Ferrari F430","brand":"Hornby","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"18T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Maserati MC12 White","brand":"Scalextric","sottoclasse":"GT1 - Anni '90-2000","tr":"19T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":11},{"name":"Mini 1275 GT Red","brand":"Scalextric","sottoclasse":"Mini Challenge - Anni '90-'00","tr":"25T","magnete":false,"category":"Stradali"},{"name":"Opel Astra V8 DTM Coupe","brand":"Hornby","sottoclasse":"GT Storiche - Anni '60-'80","tr":"23T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":9.5},{"name":"Mc Laren Watson","brand":"NonnoSlot","sottoclasse":"F1 - Anni '80-'90","tr":"21T","magnete":false,"category":"F1"},{"name":"Lotus C7","brand":"Hornby","sottoclasse":"Caterham 7 - Anni '60-'80","tr":"21T","magnete":true,"category":"Stradali","gomma_diam":18.5,"gomma_larg":8},{"name":"Chevrolet Camaro GS","brand":"Hornby","sottoclasse":"Trans-Am - Anni '60-'70","tr":"17T","magnete":true,"category":"Stradali","gomma_diam":20.5,"gomma_larg":10},{"name":"Renault Megane","brand":"Ninco","sottoclasse":"Rally WRC - Anni '90-'00","tr":"99 KO","magnete":false,"category":"WRC","gomma_diam":19,"gomma_larg":10},{"name":"TVR T400R","brand":"Hornby","sottoclasse":"GT1 - Anni '90-2000","tr":"18T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Audi R8 LMS","brand":"Scalextric","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"18T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Mercedes Sauber C9","brand":"Hornby","sottoclasse":"Group C - Anni '80-'90","tr":"25T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10.5},{"name":"Subaru BRZ","brand":"Policar","sottoclasse":"Sportive e Supercars","tr":"19T","magnete":true,"category":"Stradali","gomma_diam":18,"gomma_larg":10},{"name":"Firestone ","brand":"Hornby","sottoclasse":"F1 - Anni '90-'10","tr":"22T","magnete":false,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Porsche  962C 85","brand":"Slot.it","sottoclasse":"Group C - Anni '80-'90","tr":"16T","magnete":true,"category":"GT Le Mans","anno":1987,"gomma_diam":18,"gomma_larg":10},{"name":"Mitsubishi Lancer","brand":"Ninco","sottoclasse":"Rally WRC - Anni '90-'00","tr":"23T","magnete":false,"category":"WRC","gomma_diam":20.5,"gomma_larg":8},{"name":"Porsche  911 GT 3R","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Porsche  911-GT1","brand":"Ninco","sottoclasse":"GT1 - Anni '90-2000","tr":"24T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":10},{"name":"Dallara Daytona DP","brand":"Sideways","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"22T","magnete":false,"category":"GT Le Mans","anno":2011,"gomma_diam":20.5,"gomma_larg":11.5},{"name":"Mc Laren MP4-12C","brand":"Hornby","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"20T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11},{"name":"Corvette C7R","brand":"NSR","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"21T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":12},{"name":"Matra MS670","brand":"Fleishmann","sottoclasse":"GT Storiche - Anni '60-'80","tr":"26-30","magnete":true,"category":"GT Le Mans","gomma_diam":20.5,"gomma_larg":10},{"name":"Chevrolet Corvette L88","brand":"Hornby","sottoclasse":"Trans-Am - Anni '60-'70","tr":"17T","magnete":true,"category":"Stradali","gomma_diam":20.5,"gomma_larg":10},{"name":"Aston Martin Vantage N24","brand":"SCX","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"19T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10},{"name":"Kart Rosso","brand":"Home Made","sottoclasse":"Go Kart","tr":"24T","magnete":false,"category":"Kart","gomma_diam":20,"gomma_larg":11.3},{"name":"Mosler MT 900 Playboy","brand":"NSR","sottoclasse":"GT1 - Anni '90-2000","tr":"21T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":12},{"name":"Camion Mercedes-Benz \"Bosch/Bild/Hermann Brave\" #14","brand":"GBtrack","sottoclasse":"","tr":"99 KO","magnete":false,"category":""},{"name":"F1 24 White","brand":"Policar ","sottoclasse":"F1 - Anni '2020","tr":"17T","magnete":true,"category":"F1","anno":2024,"gomma_diam":19,"gomma_larg":10},{"name":"Ferrari 330 P4","brand":"Hornby","sottoclasse":"GT Storiche - Anni '60-'80","tr":"24T","magnete":false,"category":"GT Le Mans","anno":1967,"gomma_diam":21,"gomma_larg":11.5},{"name":"BMW Mini Cooper","brand":"Hornby","sottoclasse":"Mini - Anni '00-'10","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19.5,"gomma_larg":8.5},{"name":"Lotus 72","brand":"Hornby","sottoclasse":"F1 - Anni '70-'80","tr":"18T","magnete":true,"category":"F1","gomma_diam":21,"gomma_larg":13.5},{"name":"Lotus C82","brand":"Scalextric","sottoclasse":"F1 - Anni '50-'60","tr":"26-30","magnete":true,"category":"F1"},{"name":"Benetton Ford B190","brand":"Hornby","sottoclasse":"F1 - Anni '80-'90","tr":"22T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Audi Sport Quattro Rothmans #9 - Acropolis Rally","brand":"FLY","sottoclasse":"Rally WRC - Anni '90-'00","tr":"23T","magnete":false,"category":"WRC","anno":1982,"gomma_diam":19,"gomma_larg":11},{"name":"Porsche  911 Philips","brand":"Ninco","sottoclasse":"Sportive e Supercars","tr":"24T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Audi R8C","brand":"Slot.it","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"17T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":11.3},{"name":"Nissan R90V","brand":"Slot.it","sottoclasse":"Group C - Anni '80-'90","tr":"16T","magnete":true,"category":"GT Le Mans","anno":1990,"gomma_diam":19,"gomma_larg":10},{"name":"Porsche  911 GT 3R","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Panoz LMP-1","brand":"FLY","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"19T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Dodge Viper GTS-R \"McCann Racing\" #82","brand":"Hornby","sottoclasse":"GT1 - Anni '90-2000","tr":"99 KO","magnete":false,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11},{"name":"Jaguar XJR-9","brand":"Scalextric","sottoclasse":"Group C - Anni '80-'90","tr":"25T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10.5},{"name":"Minardi ","brand":"Hornby","sottoclasse":"F1 - Anni '80-'90","tr":"22T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Ford GT40","brand":"NSR","sottoclasse":"GT Storiche - Anni '60-'80","tr":"21T","magnete":false,"category":"GT Le Mans","gomma_diam":20.5,"gomma_larg":10},{"name":"Ford Taurus","brand":"Hornby","sottoclasse":"Nascar - Anni '90-'00","tr":"22T","magnete":false,"category":"Nascar","gomma_diam":21,"gomma_larg":9},{"name":"Ferrari 330 P4","brand":"Hornby","sottoclasse":"GT Storiche - Anni '60-'80","tr":"24T","magnete":false,"category":"GT Le Mans","anno":1967,"gomma_diam":21,"gomma_larg":11.5},{"name":"JPS Renault","brand":"Scalextric","sottoclasse":"F1 - Anni '80-'90","tr":"22T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"VW Beetle G1","brand":"Hornby","sottoclasse":"Beetle - Anni '70-'00","tr":"23T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"BMW Mini Cooper","brand":"Hornby","sottoclasse":"Mini - Anni '00-'10","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19.5,"gomma_larg":8.5},{"name":"Mini 1275 GT","brand":"Scalextric","sottoclasse":"Mini Challenge - Anni '90-'00","tr":"25T","magnete":false,"category":"Stradali"},{"name":"TVR Speed12","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"18T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Sauber ","brand":"Slot.it","sottoclasse":"Group C - Anni '80-'90","tr":"17T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":11.3},{"name":"Mercedes ","brand":"Hornby","sottoclasse":"F1 - Anni '90-'10","tr":"22T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":11.5},{"name":"Mercedes CLR","brand":"NonnoSlot","sottoclasse":"GT1 - Anni '90-2000","tr":"21T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":10},{"name":"Porsche  997","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"19T","magnete":true,"category":"Stradali","gomma_diam":20,"gomma_larg":10},{"name":"Kart Bianco","brand":"Home Made","sottoclasse":"Go Kart","tr":"24T","magnete":false,"category":"Kart","gomma_diam":20,"gomma_larg":11.3},{"name":"Tyrrel 006","brand":"Hornby","sottoclasse":"F1 - Anni '70-'80","tr":"25T","magnete":true,"category":"F1","anno":1971,"gomma_diam":21,"gomma_larg":13.5},{"name":"Lotus C7","brand":"Hornby","sottoclasse":"Caterham 7 - Anni '60-'80","tr":"21T","magnete":true,"category":"Stradali","gomma_diam":18.5,"gomma_larg":8},{"name":"Lotus C7","brand":"Hornby","sottoclasse":"Caterham 7 - Anni '60-'80","tr":"21T","magnete":true,"category":"Stradali","gomma_diam":18.5,"gomma_larg":8},{"name":"Alfa Romeo Giulia Sprint GTAm Kent","brand":"RevoSlot","sottoclasse":"GT Storiche - Anni '60-'80","tr":"25T","magnete":false,"category":"GT Le Mans","anno":1971,"gomma_diam":20,"gomma_larg":10},{"name":"Panoz LMP 1","brand":"FLY","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"19T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Venturi MVS 600","brand":"FLY","sottoclasse":"GT1 - Anni '90-2000","tr":"23T","magnete":false,"category":"GT Le Mans","anno":1994,"gomma_diam":20,"gomma_larg":12},{"name":"Peugeot 307","brand":"Ninco","sottoclasse":"Rally WRC - Anni '90-'00","tr":"23T","magnete":false,"category":"WRC","gomma_diam":19,"gomma_larg":10},{"name":"Marcos 600 LM \"Repsol Locura Xbox\" #5","brand":"FLY","sottoclasse":"GT1 - Anni '90-2000","tr":"25T","magnete":false,"category":"GT Le Mans","gomma_diam":20.5,"gomma_larg":10.5},{"name":"Kart Nero","brand":"Home Made","sottoclasse":"Go Kart","tr":"24T","magnete":false,"category":"Kart","gomma_diam":20,"gomma_larg":11.3},{"name":"Corvette C6R","brand":"NSR","sottoclasse":"GT1 - Anni '90-2000","tr":"21T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":12},{"name":"Alfa 33/3","brand":"Slot.it","sottoclasse":"GT Storiche - Anni '60-'80","tr":"22T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10.5},{"name":"Porsche  Boxter","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"18T","magnete":true,"category":"Stradali","gomma_diam":20,"gomma_larg":10},{"name":"Ferrari F430","brand":"BBR Models","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"24T","magnete":false,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Lola MG","brand":"Hornby","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"17T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Renault Sport","brand":"Ninco","sottoclasse":"Rally WRC - Anni '90-'00","tr":"23T","magnete":false,"category":"WRC","gomma_diam":19,"gomma_larg":10},{"name":"AIR 9.8 TVR","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"18T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Porsche 997 GT2","brand":"Avant Slot","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"21T","magnete":false,"category":"GT Le Mans","anno":2006,"gomma_diam":19,"gomma_larg":10},{"name":" Brabham BT 26","brand":"Scalextric","sottoclasse":"F1 - Anni '50-'60","tr":"26-30","magnete":true,"category":"F1","gomma_diam":21,"gomma_larg":13.5},{"name":"Chevrolet Impala Kellogg ","brand":"Hornby","sottoclasse":"Nascar - Anni '90-'00","tr":"23T","magnete":false,"category":"Nascar","gomma_diam":21,"gomma_larg":9},{"name":"Porsche 956 \"Spirit of America\"","brand":"Slot.it","sottoclasse":"Group C - Anni '80-'90","tr":"25T","magnete":false,"category":"GT Le Mans","anno":1986,"gomma_diam":20,"gomma_larg":11.3},{"name":"Renault Megane","brand":"Hornby","sottoclasse":"Rally WRC - Anni '90-'00","tr":"22T","magnete":true,"category":"WRC","gomma_diam":19,"gomma_larg":10},{"name":"Opel Kadett GT/E","brand":"RevoSlot","sottoclasse":"GT Storiche - Anni '60-'80","tr":"25T","magnete":false,"category":"GT Le Mans","anno":1970,"gomma_diam":20,"gomma_larg":10},{"name":"Ford Mustang","brand":"Hornby","sottoclasse":"Trans-Am - Anni '60-'70","tr":"17T","magnete":true,"category":"Stradali","gomma_diam":20.5,"gomma_larg":10},{"name":"Mc Laren MP4 - 16","brand":"Hornby","sottoclasse":"F1 - Anni '90-'10","tr":"21T","magnete":true,"category":"F1","gomma_diam":21,"gomma_larg":11.5},{"name":"Mosler MT900R","brand":"NSR","sottoclasse":"GT1 - Anni '90-2000","tr":"21T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":12},{"name":"RCT","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":21,"gomma_larg":11.5},{"name":"Porsche 956/962","brand":"NonnoSlot","sottoclasse":"Group C - Anni '80-'90","tr":"22T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":10},{"name":"Lamborghini Gallardo","brand":"Ninco","sottoclasse":"Sportive e Supercars","tr":"22T","magnete":false,"category":"Stradali","anno":2008,"gomma_diam":20.5,"gomma_larg":10.5},{"name":"Porsche Moby Dick 935","brand":"Sideways","sottoclasse":"GT Storiche - Anni '60-'80","tr":"23T","magnete":false,"category":"GT Le Mans","anno":1978},{"name":"Maserati MC12 Vodafone","brand":"Scalextric","sottoclasse":"GT1 - Anni '90-2000","tr":"19T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":11},{"name":"Porsche  911 GT 3R","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"18T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Porsche 906 Carrera","brand":"Fleishmann","sottoclasse":"GT Storiche - Anni '60-'80","tr":"26-30","magnete":true,"category":"GT Le Mans","gomma_diam":20.5,"gomma_larg":10},{"name":"Joker","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"18T","magnete":true,"category":"Stradali","gomma_diam":20,"gomma_larg":13},{"name":"TVR RCT","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"99 KO","magnete":true,"category":"Stradali","gomma_diam":21,"gomma_larg":10.5},{"name":"Porsche 917","brand":"Scalextric","sottoclasse":"GT Storiche - Anni '60-'80","tr":"26-30","magnete":true,"category":"GT Le Mans"},{"name":"Nissan R90CK","brand":"NonnoSlot","sottoclasse":"Group C - Anni '80-'90","tr":"21T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":10},{"name":"Jaguar XJR9","brand":"Scalextric","sottoclasse":"Group C - Anni '80-'90","tr":"25T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10.5},{"name":"Benetton B193","brand":"Hornby","sottoclasse":"F1 - Anni '90-'10","tr":"23T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"BMW Mini Cooper","brand":"Hornby","sottoclasse":"Mini - Anni '00-'10","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19.5,"gomma_larg":8.5},{"name":"Panoz LMP 1","brand":"FLY","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"99 KO","magnete":true,"category":"GT Le Mans"},{"name":"Ferrari 312 PB CL","brand":"Sloter","sottoclasse":"GT Storiche - Anni '60-'80","tr":"20T","magnete":true,"category":"GT Le Mans","anno":1974,"gomma_diam":20.5,"gomma_larg":10.5},{"name":"Ferrari ","brand":"Hornby","sottoclasse":"F1 - Anni '90-'10","tr":"22T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Chevron B21","brand":"FLY","sottoclasse":"GT Storiche - Anni '60-'80","tr":"24T","magnete":true,"category":"GT Le Mans"},{"name":"Porsche 962C","brand":"Slot.it","sottoclasse":"Group C - Anni '80-'90","tr":"17T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":11.3},{"name":"Riley MK","brand":"Sideways","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"22T","magnete":false,"category":"GT Le Mans","anno":2009,"gomma_diam":20.5,"gomma_larg":11.5},{"name":"Corvette C6R","brand":"NSR","sottoclasse":"GT1 - Anni '90-2000","tr":"21T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":12},{"name":"BMW Mini Cooper S","brand":"Hornby","sottoclasse":"Mini - Anni '00-'10","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":18,"gomma_larg":10},{"name":"Nissan R390 GT1","brand":"Slot.it","sottoclasse":"GT1 - Anni '90-2000","tr":"22T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":10},{"name":"Corvette C6R","brand":"NSR","sottoclasse":"GT1 - Anni '90-2000","tr":"21T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":12},{"name":"Jaguar XKR GT3 #1 BFGoodrich","brand":"Scalextric","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"25T","magnete":false,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11},{"name":"Ferrari 312 PB","brand":"Sloter","sottoclasse":"GT Storiche - Anni '60-'80","tr":"20T","magnete":true,"category":"GT Le Mans","anno":1972,"gomma_diam":20,"gomma_larg":10},{"name":"Lola MG","brand":"Hornby","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"17T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Chevrolet Camaro GS","brand":"Hornby","sottoclasse":"Trans-Am - Anni '60-'70","tr":"17T","magnete":true,"category":"Stradali","anno":1969,"gomma_diam":20.5,"gomma_larg":10},{"name":"BMW Mini Cooper","brand":"Hornby","sottoclasse":"Mini - Anni '00-'10","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19.5,"gomma_larg":8.5},{"name":"Porsche  956 KH","brand":"Slot.it","sottoclasse":"Group C - Anni '80-'90","tr":"16T","magnete":true,"category":"GT Le Mans","anno":1983,"gomma_diam":18,"gomma_larg":10},{"name":"Pagani Huayra Drago","brand":"Scalextric","sottoclasse":"Sportive e Supercars","tr":"17T","magnete":true,"category":"Stradali","gomma_diam":21,"gomma_larg":11},{"name":"Jaguar XJR9 ","brand":"Slot.it","sottoclasse":"Group C - Anni '80-'90","tr":"22T","magnete":false,"category":"GT Le Mans","gomma_diam":20.5,"gomma_larg":10.5},{"name":"Chevrolet Impala","brand":"Hornby","sottoclasse":"Nascar - Anni '90-'00","tr":"22T","magnete":true,"category":"Nascar","gomma_diam":21,"gomma_larg":9},{"name":"Porsche 962","brand":"Scalextric","sottoclasse":"Group C - Anni '80-'90","tr":"25T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10.5},{"name":"SCX Tuning Series","brand":"SCX","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"24T","magnete":false,"category":"GT Le Mans"},{"name":"Chevrolet Camaro GS","brand":"Hornby","sottoclasse":"Trans-Am - Anni '60-'70","tr":"18T","magnete":true,"category":"Stradali","anno":1969,"gomma_diam":20.5,"gomma_larg":10},{"name":"VW Beetle Cabrio","brand":"Hornby","sottoclasse":"Beetle - Anni '70-'00","tr":"23T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Lola MG","brand":"Hornby","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"17T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Lola T280 Switzerland ","brand":"Sloter","sottoclasse":"GT Storiche - Anni '60-'80","tr":"20T","magnete":true,"category":"GT Le Mans","anno":1972,"gomma_diam":20.5,"gomma_larg":10.5},{"name":"Ferrari ","brand":"Pro Slot","sottoclasse":"F1 - Anni '90-'10","tr":"26-30","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Mini Challenge","brand":"Scalextric","sottoclasse":"Mini Challenge - Anni '90-'00","tr":"25T","magnete":false,"category":"Stradali","gomma_diam":19,"gomma_larg":8},{"name":"Ferrari F430","brand":"Hornby","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"18T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Porsche 962 CK6","brand":"Hornby","sottoclasse":"Group C - Anni '80-'90","tr":"25T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":10.5},{"name":"Arrows","brand":"SCX","sottoclasse":"F1 - Anni '80-'90","tr":"21T","magnete":true,"category":"F1","gomma_diam":19.5,"gomma_larg":12},{"name":"Audi TT Rossa","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"17T","magnete":true,"category":"Stradali","gomma_diam":20,"gomma_larg":10},{"name":"VW Beetle G2","brand":"Hornby","sottoclasse":"Beetle - Anni '70-'00","tr":"23T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Renault ","brand":"Hornby","sottoclasse":"F1 - Anni '90-'10","tr":"22T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"TVR T400R","brand":"Hornby","sottoclasse":"GT1 - Anni '90-2000","tr":"18T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Chevrolet Corvette L88","brand":"Hornby","sottoclasse":"Trans-Am - Anni '60-'70","tr":"17T","magnete":true,"category":"Stradali","gomma_diam":20.5,"gomma_larg":10},{"name":"Skoda Fabia","brand":"Hornby","sottoclasse":"Rally WRC - Anni '90-'00","tr":"23T","magnete":false,"category":"WRC","gomma_diam":20.5,"gomma_larg":8},{"name":"Ferrari 330 P4","brand":"Hornby","sottoclasse":"GT Storiche - Anni '60-'80","tr":"24T","magnete":false,"category":"GT Le Mans","anno":1967,"gomma_diam":21,"gomma_larg":11.5},{"name":"Lola MG","brand":"Hornby","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"20T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Alfa Tipo 33","brand":"Fleishmann","sottoclasse":"GT Storiche - Anni '60-'80","tr":"26-30","magnete":true,"category":"GT Le Mans","gomma_diam":20.5,"gomma_larg":10},{"name":"Ferrari 330 P4","brand":"Hornby","sottoclasse":"GT Storiche - Anni '60-'80","tr":"24T","magnete":false,"category":"GT Le Mans","anno":1967,"gomma_diam":21,"gomma_larg":11.5},{"name":"Ferrari 312 PB CL","brand":"Sloter","sottoclasse":"GT Storiche - Anni '60-'80","tr":"20T","magnete":true,"category":"GT Le Mans","anno":1972,"gomma_diam":20.5,"gomma_larg":10.5},{"name":"Seat Cupra GT","brand":"SCX","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"24T","magnete":false,"category":"GT Le Mans"},{"name":"Pagani Zonda R","brand":"Slot.it","sottoclasse":"GT1 - Anni '90-2000","tr":"22T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":10},{"name":"Cooper C81","brand":"Scalextric","sottoclasse":"F1 - Anni '50-'60","tr":"26-30","magnete":true,"category":"F1"},{"name":"Ferrari 330 P4","brand":"Hornby","sottoclasse":"GT Storiche - Anni '60-'80","tr":"24T","magnete":false,"category":"GT Le Mans","anno":1967,"gomma_diam":21,"gomma_larg":11.5},{"name":"F1 24 Red","brand":"Policar ","sottoclasse":"F1 - Anni '2020","tr":"17T","magnete":true,"category":"F1","anno":2024,"gomma_diam":19,"gomma_larg":10},{"name":"Honda NSX JGTC \"EPSON PIAA Castrol\" #32","brand":"Ninco","sottoclasse":"GT1 - Anni '90-2000","tr":"25T","magnete":false,"category":"GT Le Mans","gomma_diam":20.5,"gomma_larg":10},{"name":"Ford Taurus","brand":"Hornby","sottoclasse":"Nascar - Anni '90-'00","tr":"22T","magnete":false,"category":"Nascar","gomma_diam":21,"gomma_larg":9},{"name":"VW Beetle V1","brand":"Hornby","sottoclasse":"Beetle - Anni '70-'00","tr":"23T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Benetton B195","brand":"Hornby","sottoclasse":"F1 - Anni '90-'10","tr":"23T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Mercedes 300 SLR","brand":"Slot.it","sottoclasse":"GT Storiche - Anni '60-'80","tr":"23T","magnete":false,"category":"GT Le Mans","gomma_diam":23,"gomma_larg":8},{"name":"BMW Mini Cooper","brand":"Hornby","sottoclasse":"Mini - Anni '00-'10","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19.5,"gomma_larg":8.5},{"name":"Chevron B21","brand":"FLY","sottoclasse":"GT Storiche - Anni '60-'80","tr":"20T","magnete":true,"category":"GT Le Mans","anno":1972,"gomma_diam":18,"gomma_larg":10},{"name":"Riley MK Aim Autosport","brand":"Sideways","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"22T","magnete":false,"category":"GT Le Mans","anno":2010,"gomma_diam":20.5,"gomma_larg":11.5},{"name":"Chevron B21 \"Tergal\" Red Rose Racing #5","brand":"GBtrack","sottoclasse":"GT Storiche - Anni '60-'80","tr":"24T","magnete":false,"category":"GT Le Mans","anno":1972},{"name":"Subaru BRZ","brand":"Policar","sottoclasse":"Sportive e Supercars","tr":"19T","magnete":true,"category":"Stradali","gomma_diam":18,"gomma_larg":10},{"name":"Aston Martin DBR9","brand":"Scalextric","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"19T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"BMW Mini Cooper","brand":"Hornby","sottoclasse":"Mini - Anni '00-'10","tr":"20T","magnete":true,"category":"Stradali","gomma_diam":19.5,"gomma_larg":8.5},{"name":"Corvette C8R","brand":"NSR","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"21T","magnete":false,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":12},{"name":"Lola MG","brand":"Hornby","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"17T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Lotus C7","brand":"Hornby","sottoclasse":"Caterham 7 - Anni '60-'80","tr":"21T","magnete":true,"category":"Stradali","gomma_diam":18.5,"gomma_larg":8},{"name":"TVR Starco","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"18T","magnete":true,"category":"Stradali","gomma_diam":21,"gomma_larg":10.5},{"name":"McLaren GTR ","brand":"Scalextric","sottoclasse":"GT1 - Anni '90-2000","tr":"19T","magnete":true,"category":"GT Le Mans","anno":1995},{"name":"Lancia WRC 037","brand":"FLY","sottoclasse":"Rally WRC - Anni '90-'00","tr":"25T","magnete":true,"category":"WRC","gomma_diam":19,"gomma_larg":11},{"name":"Dallara Daytona DP","brand":"Sideways","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"22T","magnete":false,"category":"GT Le Mans","anno":2009,"gomma_diam":20.5,"gomma_larg":11.5},{"name":"Mosler MT900R #24 Perspective Racing (Daytona)","brand":"Ninco","sottoclasse":"GT1 - Anni '90-2000","tr":"23T","magnete":false,"category":"GT Le Mans","anno":2002,"gomma_diam":20,"gomma_larg":12},{"name":"Alfa Romeo 156 GTA Pearle","brand":"FLY","sottoclasse":"GT Storiche - Anni '60-'80","tr":"25T","magnete":false,"category":"GT Le Mans"},{"name":"VW Beetle","brand":"Hornby","sottoclasse":"Beetle - Anni '70-'00","tr":"23T","magnete":true,"category":"Stradali","gomma_diam":19,"gomma_larg":10},{"name":"Mercedes CLK DTM AMG Vodafone #2","brand":"Hornby","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"24T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":10},{"name":"Porsche GT1 EVO \"Team Gunnar\" #6 Highcroft Racing","brand":"GBtrack","sottoclasse":"GT1 - Anni '90-2000","tr":"99 KO","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":10},{"name":"Lola MG","brand":"Spirit","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"21T","magnete":true,"category":"GT Le Mans","gomma_diam":21,"gomma_larg":11.5},{"name":"Williams FW10","brand":"Hornby","sottoclasse":"F1 - Anni '80-'90","tr":"23T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Lotus C7","brand":"Hornby","sottoclasse":"Caterham 7 - Anni '60-'80","tr":"21T","magnete":true,"category":"Stradali","gomma_diam":18.5,"gomma_larg":8},{"name":"Kart Blu","brand":"Home Made","sottoclasse":"Go Kart","tr":"24T","magnete":false,"category":"Kart","gomma_diam":20,"gomma_larg":11.3},{"name":"Lola T290","brand":"Sloter","sottoclasse":"GT Storiche - Anni '60-'80","tr":"20T","magnete":true,"category":"GT Le Mans","anno":1972,"gomma_diam":20.5,"gomma_larg":10.5},{"name":"Pagani Huayra Drago","brand":"Scalextric","sottoclasse":"Sportive e Supercars","tr":"17T","magnete":true,"category":"Stradali","gomma_diam":21,"gomma_larg":11},{"name":"Mc Laren ","brand":"Hornby","sottoclasse":"F1 - Anni '90-'10","tr":"22T","magnete":true,"category":"F1","gomma_diam":20.5,"gomma_larg":13.5},{"name":"Renault Megane","brand":"Hornby","sottoclasse":"Rally WRC - Anni '90-'00","tr":"22T","magnete":true,"category":"WRC","gomma_diam":19,"gomma_larg":10},{"name":"Ford Focus","brand":"Hornby","sottoclasse":"Rally WRC - Anni '90-'00","tr":"23T","magnete":false,"category":"WRC","gomma_diam":20.5,"gomma_larg":8},{"name":"Mitsubishi Lancer","brand":"Ninco","sottoclasse":"Rally WRC - Anni '90-'00","tr":"23T","magnete":false,"category":"WRC","anno":2005,"gomma_diam":20.5,"gomma_larg":8},{"name":"Citroen Xsara T4","brand":"SCX","sottoclasse":"Rally WRC - Anni '90-'00","tr":"23T","magnete":false,"category":"WRC","gomma_diam":20.5,"gomma_larg":10.5},{"name":"Porsche wsc95 team Joest","brand":"FLY","sottoclasse":"GT Moderne '00 (gt2,gte,gt3, lmp)","tr":"19T","magnete":true,"category":"GT Le Mans","gomma_diam":20,"gomma_larg":12},{"name":"Ford Taurus","brand":"Hornby","sottoclasse":"Nascar - Anni '90-'00","tr":"22T","magnete":false,"category":"Nascar","gomma_diam":21,"gomma_larg":9},{"name":"Alfa Romeo TZ2","brand":"FLY","sottoclasse":"GT Storiche - Anni '60-'80","tr":"25T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":11},{"name":"Porsche 935 K3","brand":"FLY","sottoclasse":"GT Storiche - Anni '60-'80","tr":"23T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":11},{"name":"Toyota 88C","brand":"Slot.it","sottoclasse":"Group C - Anni '80-'90","tr":"16T","magnete":true,"category":"GT Le Mans","anno":1988,"gomma_diam":18,"gomma_larg":10},{"name":"Lola T280 V8","brand":"Sloter","sottoclasse":"GT Storiche - Anni '60-'80","tr":"20T","magnete":true,"category":"GT Le Mans","anno":1972,"gomma_diam":20.5,"gomma_larg":10.5},{"name":"Renault R25","brand":"Hornby","sottoclasse":"F1 - Anni '90-'10","tr":"21T","magnete":true,"category":"F1","gomma_diam":21,"gomma_larg":11.5},{"name":"Alfa Romeo Giulia sprint GTAm Kent","brand":"RevoSlot","sottoclasse":"GT Storiche - Anni '60-'80","tr":"25T","magnete":false,"category":"GT Le Mans","anno":1971,"gomma_diam":20,"gomma_larg":10},{"name":"Ferrari Pironi","brand":"NonnoSlot","sottoclasse":"F1 - Anni '80-'90","tr":"21T","magnete":false,"category":"F1"},{"name":"Renault Prost","brand":"NonnoSlot","sottoclasse":"F1 - Anni '80-'90","tr":"21T","magnete":false,"category":"F1"},{"name":"Nissan R390 GT1 Green","brand":"TeamSlot","sottoclasse":"GT1 - Anni '90-2000","tr":"23T","magnete":false,"category":"GT Le Mans","gomma_diam":19,"gomma_larg":10},{"name":"Subaru BRZ","brand":"Policar","sottoclasse":"Sportive e Supercars","tr":"19T","magnete":true,"category":"Stradali","gomma_diam":18,"gomma_larg":10},{"name":"Ford Taurus","brand":"Hornby","sottoclasse":"Nascar - Anni '90-'00","tr":"22T","magnete":false,"category":"Nascar","gomma_diam":21,"gomma_larg":9},{"name":"F1 24 Blu","brand":"Policar ","sottoclasse":"F1 - Anni '2020","tr":"17T","magnete":true,"category":"F1","anno":2024,"gomma_diam":19,"gomma_larg":10},{"name":"Mitsubishi Lancer","brand":"Hornby","sottoclasse":"Rally WRC - Anni '90-'00","tr":"23T","magnete":false,"category":"WRC","gomma_diam":20.5,"gomma_larg":8},{"name":"Audi TT Blu","brand":"Hornby","sottoclasse":"Sportive e Supercars","tr":"17T","magnete":true,"category":"Stradali","gomma_diam":20,"gomma_larg":10},{"name":"Chevrolet Camaro GS","brand":"Hornby","sottoclasse":"Trans-Am - Anni '60-'70","tr":"19T","magnete":true,"category":"Stradali","anno":2014,"gomma_diam":20.5,"gomma_larg":10}];
+const D={"cars":[["0a6u5hiYspbzU2","Ferrari F40","Slot.it","GT1",0,["7EF7BrojJi5pQp","RYDC1P6t92BkKT"],["1QAE1Pygc9L532"],null,"blu",34,"80",null,"",0,"Ferth Thevenin","","",0],["1Q3PF0WfpJ50Sb","BMW Mini Cooper","Hornby","MI",1,["9ejJVrYo6eJkSW"],["0DH7HT3CNYOy3D"],null,"arancio",33,"00",null,"",1,"Beautran","19.5x13.5x8.5","",0],["1XofqA5WA91170","Subaru BRZ","Policar","SP",1,["oi7rYa5EVMlIT8"],[],null,"Rosso",null,"20",null,"Subaru",1,"","","",0],["1fAlbe8PKZpLvK","Mini Challenge","Scalextric","MC",0,["k2jrFuQi3fqIB3"],["0DH7HT3CNYOy3D"],null,"Blu",47,"70",null,"",0,"","","",0],["1xmPSUpFcdVWsI","Lola MG","Hornby","GM",1,["1eEYBlEDr5r6uq"],["0DH7HT3CNYOy3D"],null,"Nera/Bianca",30,"00",null,"LolaFast",1,"Hawkins, Knight, Dayton","21x15.5x10.5","",0],["2JIaiFvNRt8s9p","Tyrrel 019","Scalextric","F8",1,["peVRZWkZX1QRzG","CfgQCUhxTOIDPm"],["Pl8M0ratb7Oe1Q"],null,"biancoblu",4,"90",null,"",0,"Alesi","20.5x12x13.5","",0],["2L3P3e8VXYEbLJ","Williams Saudia","Scalextric","F8",0,["peVRZWkZX1QRzG","CfgQCUhxTOIDPm"],["Pl8M0ratb7Oe1Q"],null,"Verde",27,"10",null,"",0,"","20.5x12x13.5","",0],["2Xpq5592N6HT94","Audi R8 Crocodile #77 - Adelaide 2002","SCX","GM",0,["1eEYBlEDr5r6uq"],["0DH7HT3CNYOy3D"],null,"Verde/Bianco/Azzurro",77,"00",2002,"",0,"Rinaldo \"Dindo\" Capello / Allan McNish","","",0],["2dgTtRNfHfbIAR","Maserati MC12 Superslot","Scalextric","GT1",1,["zKgh5wS8KOPFI5"],["0DH7HT3CNYOy3D"],21600,"Blu Rosso",1,"00",null,"",1,"","20x15x11","",0],["2vmoamm17RtbAJ","Ford Taurus","Hornby","NA",0,["6XtgXaBhj2t7jv"],["0DH7HT3CNYOy3D"],20000,"grigia",null,"70",null,"",0,"Test track","21x12x9","25",0],["3IhzHCDCbN5Muo","Porsche 911 GT1-98 \"Marlboro/Shell\" #3","FLY","GT1",0,["wHTyICqE4Ts9vH","mG9fIICZ7NFXMp"],["d45jZWmhJQYXpv"],null,"Bianco/Rosso",3,"90",1998,"",0,"","","",0],["3UzeKwcfzcwjo9","TVR Speed 12","Hornby","SP",1,["wHTyICqE4Ts9vH"],["0DH7HT3CNYOy3D"],null,"grigia viola",6,"90",null,"",0,"","19x13x10","",0],["48GxWwF538UMz0","Lola MG","Hornby","GM",1,["1eEYBlEDr5r6uq"],["0DH7HT3CNYOy3D"],null,"Verde",33,"00",null,"LolaFast",1,"Blindey Bailey McGarrity","21x15.5x10.5","",0],["4D5HTttWPkSdqP","Ferrari 499P","NonnoSlot","GM",0,["3gyJtKb8J4KhGl"],[],20140,"Rossa",50,"20",2024,"",0,"","20.2x?x11.3","",0],["4QSn4j1YUEKZf8","Williams ","Hornby","F7",1,["peVRZWkZX1QRzG","CfgQCUhxTOIDPm"],["Pl8M0ratb7Oe1Q"],null,"blu",5,"60",null,"",0,"Eagle Curney Weslake","20.5x12x13.5","",0],["4jhsJiOGWcGODy","Porsche 917 #6 Sunoco","Polistil","GS",0,[],[],null,"Nero",6,"",1973,"",0,"Penske Racing (Mark Donohue)","","",0],["4kw9Wwh7xc6QHM"," Toshiba Cadillac","Hornby","GC",1,["crYNWdVsm3g4q2"],["0DH7HT3CNYOy3D"],null,"grigia",1,"80,90",null,"",0,"Lagorge Letzinger Wallace","","",0],["4p3E6VgcpsaKWY","Lotus Honda","Scalextric","F8",1,["peVRZWkZX1QRzG","CfgQCUhxTOIDPm"],["Pl8M0ratb7Oe1Q"],17500,"Giallo",12,"70,80",null,"",0,"","20.5x12x13.5","",0],["52U8gPHnt8A1rI","Porsche 962C","Hornby","GC",1,["Q7kCQA0Tt7fKql","06Hh4wzEmkDfyL","wrkolF8IjYWy9M"],["0DH7HT3CNYOy3D"],null,"Gialla",27,"80,90",null,"",0,"","20x11","",0],["5C7xXckIOLqetH","Chevrolet Corvette L88","Hornby","TA",1,["CvVUPTINtkPRES","06Hh4wzEmkDfyL"],["0DH7HT3CNYOy3D"],null,"Nera",null,"70",null,"",1,"Cabrio","20.5x11.5x10","",0],["5EkytxGhjn6aJR","Alfa Romeo","Polistil","F7",1,[],[],null,"Rosso blu",null,"60",null,"",0,"","","",0],["5YMmIhe0PZyn2m","Porsche 934/935 \"Brumos Porsche\" #61","Ninco","GS",0,["wHTyICqE4Ts9vH","mG9fIICZ7NFXMp"],["s9dWedhl0dHMh1"],null,"Bianco/Rosso/Blu",61,"",null,"",0,"","","",0],["5atSgp578z3SCz","Corvette C6R","NSR","GT1",0,["RYDC1P6t92BkKT"],["LRKDZggfGYn6q7","OLaLNga7DVYWuI"],16500,"gialla",null,"00,10",null,"",0,"Sebring 2010","20.5x?x11","9x27",1],["6A1nK1Ihtm0D5y","Ford Taurus \"Unity Project.com\" #48 Union Jack","Hornby","NA",0,["6XtgXaBhj2t7jv"],[],null,"Bianco/Rosso/Blu (Union Jack)",48,"",null,"",0,"","","",0],["6iZpDcRacEOuKw","Ferrari 512 BB JPS","FLY","SP",1,["wHTyICqE4Ts9vH","mG9fIICZ7NFXMp"],["d45jZWmhJQYXpv"],null,"Nero",null,"70,80",null,"",0,"","19x?x11","",1],["6pqfiEyMWaJxLG","Williams Rosberg","NonnoSlot","F8",0,["rtvSnPXwUgtTya"],["v0rmgNOimUIBfu"],null,"Verde",6,"80",null,"",0,"Keke Rosberg","","",0],["7KKOZND8rbeD0c","F1 24 Orange","Policar ","F2",1,["wHTyICqE4Ts9vH"],["LRKDZggfGYn6q7"],null,"Arancione",null,"20",2024,"",0,"","","",0],["7iFhFzjnqR8ZXW","Aston Martin James Bond","Carrera","SP",1,["1eEYBlEDr5r6uq"],["UYyHMNNXXGz9lS"],null,"verde",null,"60",null,"",0,"","","",0],["7r7TY6Vaxly4Ly","Mosler MT900R #9 LeyJun","Ninco","GT1",1,["RYDC1P6t92BkKT"],["s9dWedhl0dHMh1"],null,"Bianco/Azzurro",9,"00",2006,"",0,"Osamu Nakajima / Takaya Tsubobayashi (Super GT 2006, GT300)","","",0],["7tcSFAc5FEnnlR","Williams FW23","Hornby","F9",1,["1eEYBlEDr5r6uq"],["Pl8M0ratb7Oe1Q"],null,"Bianco blu",6,"00",null,"",0,"Montoya ","21.5x12x12","",0],["7w8WfhAhiI51ly","Mc Laren M7C","Hornby","F7",1,["GwlUq221T8cjWf"],["Pl8M0ratb7Oe1Q"],null,"gialla",27,"70,60",1971,"",0,"Bonnier","21x12x14","",0],["84E3oqI1d1gJru","Lotus Ford ","Hornby","F7",1,["GwlUq221T8cjWf"],["Pl8M0ratb7Oe1Q"],null,"rossa",1,"70,60",1969,"",0,"Graham Hill","21x12x14","",0],["89OiEo2JKBUzFN","Matra MS670 #25 Gitanes","Polistil","GS",0,[],[],null,"Azzurro",25,"",1972,"",0,"Scuderia Filipinetti","","",0],["8DdpyZwkQ0HmSS","Batmobile","Hornby","SP",1,[],["0DH7HT3CNYOy3D"],null,"Nera",null,"20",null,"",1,"","24.5x13x10","",0],["8Pzqva0giRLHnp","Porsche  997","Hornby","SP",1,["bLXTezqCLCyxJs"],["0DH7HT3CNYOy3D"],null,"grigia",7,"00",null,"",0,"","19.5x11","9x27",0],["8e1Hkgy9kfiA2q","Renault R30","NonnoSlot","F9",0,["rtvSnPXwUgtTya"],["v0rmgNOimUIBfu"],null,"Giallo",15,"00",null,"",0,"Prost","","",0],["8vBDHDmYRQpLxg","Alfa Tipo 33","Fleishmann","GS",1,["06Hh4wzEmkDfyL","K8j1NTQPD4szP6"],[],null,"Rossa",215,"80,90",null,"GtOld",0,"","19.1x?x10","",0],["9Dme4NGFdrr4YY","Porsche 917K  3Dprint","Home Made","GS",0,["K8j1NTQPD4szP6","06Hh4wzEmkDfyL"],["0DH7HT3CNYOy3D"],null,"Oro",null,"00",null,"",0,"","","",0],["9gOEoEYIrTnZk0","Mc Laren GTR","Scaleauto","GT1",0,["RYDC1P6t92BkKT"],[],null,"Verde",null,"90",null,"",0,"Ernie Mossetti","","",0],["9tYhw8KWi9ykkY","Porsche  911 GT 3R","Hornby","SP",1,["bLXTezqCLCyxJs"],["0DH7HT3CNYOy3D"],null,"bianca",50,"00",null,"",0,"","19.5x11","9x27",0],["AHLtb244jTBE3m","Brabham BT50 Patrese","NonnoSlot","F8",0,["rtvSnPXwUgtTya"],["v0rmgNOimUIBfu"],21000,"bianco blu",2,"80",1982,"",0,"Piquet","","9x27",0],["Ag6AMk2zSbDXlD","Porsche 962","Scalextric","GC",1,["Q7kCQA0Tt7fKql","06Hh4wzEmkDfyL","wrkolF8IjYWy9M"],["0DH7HT3CNYOy3D"],null,"Blu",17,"80,90",null,"",0,"","20x11","",0],["Aqj9pklxcReXVq","Jaguar XJR9","Scalextric","GC",1,["Q7kCQA0Tt7fKql","KqBcJhLNwqA94L","3s8kBQIRsz0NeP"],["0DH7HT3CNYOy3D"],null,"Bianco Verde",60,"80,90",null,"",0,"","20x14x10.5","",0],["Awnu1oUHt619lP","Porsche  911 GT 3R","Hornby","SP",1,["bLXTezqCLCyxJs"],["0DH7HT3CNYOy3D"],null,"bianca blu",11,"00",null,"",0,"","19.5x11","9x27",0],["B7BuXZyT7SxDRq","Maserati MC12 Team Sara","Scalextric","GT1",1,["zKgh5wS8KOPFI5"],["0DH7HT3CNYOy3D"],21600,"Blu",11,"00",null,"",1,"","20x15x11","",0],["BHtuJncL50wKsk","Alfa GTA","RevoSlot","GS",0,["voWaB49aMnIU6T"],[],null,"Blu",93,"70",null,"Revo",0,"Brugger","20x10x9","9:24",0],["BZIUx6r2Yc6FrO","Toyota Takara","Scalextric","GS",0,["kAtDI61ptBmAgX","06Hh4wzEmkDfyL"],["0DH7HT3CNYOy3D"],null,"Bianco verde",36,"00",null,"",0,"Krumpf DeLaRosa","","",0],["BcJKeDKcgDC0XQ","Lotus 49","Ignota","F5",1,["GwlUq221T8cjWf"],[],null,"verde",6,"60",null,"",0,"Graham Hill","","",0],["BpsJLRkJFQ4HbZ","Audi TT Gialla","Hornby","SP",1,["voWaB49aMnIU6T"],["0DH7HT3CNYOy3D"],null,"gialla",6,"10",null,"",0,"","20x15x9","9x27",0],["CSvkuv9jLBAo1j","BMW Mini Cooper","Hornby","MI",1,["9ejJVrYo6eJkSW"],["0DH7HT3CNYOy3D"],null,"rosso blu",18,"00",null,"",1,"Barons of Farnborough","19.5x13.5x8.5","",0],["ChCiGgEEO4cZOs","VW Beetle V2","Hornby","BE",1,["Znngn8YuM7MsWV","wHTyICqE4Ts9vH","mG9fIICZ7NFXMp"],["0DH7HT3CNYOy3D"],19500,"verde",18,"10",null,"",1,"","18,5x13,5x8","9x27",0],["DhYTyWu8RfXjpN","Porsche  Boxter","Hornby","SP",1,["bLXTezqCLCyxJs"],["0DH7HT3CNYOy3D"],null,"blu",8,"00",null,"",0,"","19.5x11","9x27",0],["DpL7f8vYqGwBCx","Lotus JPS Nigel Mansell","NonnoSlot","F8",0,["rtvSnPXwUgtTya"],["v0rmgNOimUIBfu"],22000,"nera",12,"80",null,"",0,"JPS","","9x27",0],["Dr8YWdjzMSG3bb","Ferrari F430","Hornby","GM",0,["1eEYBlEDr5r6uq"],["0DH7HT3CNYOy3D"],null,"rossa",85,"00",null,"",0,"","21x15.5x10.5","9x27",0],["E7Ru54eKg11L9N","Maserati MC12 White","Scalextric","GT1",1,["zKgh5wS8KOPFI5"],["0DH7HT3CNYOy3D"],21600,"Bianca",null,"00",null,"",1,"","20x15x11","",0],["ED1GLw0QLBquvJ","Mini 1275 GT Red","Scalextric","MC",0,[],["0DH7HT3CNYOy3D"],null,"Rosso",1,"70",null,"",0,"","19,5x13,5x8","",0],["EPWLS2GZakaYqD","Opel Astra V8 DTM Coupe","Hornby","GS",0,["PIeMHsuBtiYbpA"],["0DH7HT3CNYOy3D"],21000,"gialla",7,"00",null,"",0,"Reuter","20,5x8","",0],["EYjGXNwCfprXVu","Mc Laren Watson","NonnoSlot","F8",0,["rtvSnPXwUgtTya"],["v0rmgNOimUIBfu"],21500,"bianco rossa",7,"80",null,"",0,"Marlboro ","","9x27",0],["EZaWmiekybyIpQ","Lotus C7","Hornby","CA",1,["znz1EZKrLW7lrA"],["0DH7HT3CNYOy3D"],18500,"verde",null,"70",null,"",0,"","18,5x13,5x8","9x27",0],["Ecu3Z7SbGuh2Gr","Chevrolet Camaro GS","Hornby","TA",1,["CvVUPTINtkPRES","06Hh4wzEmkDfyL"],["0DH7HT3CNYOy3D"],17500,"bianca",76,"70",null,"",0,"Chamberlain","20.5x11.5x10","",0],["ElkFfusuDUVf54","Renault Megane","Ninco","RA",0,["wHTyICqE4Ts9vH","mG9fIICZ7NFXMp"],["s9dWedhl0dHMh1"],null,"Giallo",6,"00",null,"",0,"Gomez, Marti","19x13x10","",0],["FCpualrOKF2ADD","TVR T400R","Hornby","SP",1,["1eEYBlEDr5r6uq"],["0DH7HT3CNYOy3D"],null,"Rossa Nera",51,"90",null,"",0,"","21x15.5x10.5","",0],["FEWoAr7o9DRP7K","Audi R8 LMS","Scalextric","GM",1,["1eEYBlEDr5r6uq"],["0DH7HT3CNYOy3D"],null,"Gialla blu",98,"10",null,"",0,"","21x15x11","",0],["Fd4WVQraN4LSMw","Mercedes Sauber C9","Hornby","GC",1,["Q7kCQA0Tt7fKql","wHTyICqE4Ts9vH","mG9fIICZ7NFXMp"],["0DH7HT3CNYOy3D"],null,"Grigia",61,"80,90",null,"",0,"","19.1x?x10","",0],["GCrqo5ENVfwHwL","Subaru BRZ","Policar","SP",1,["oi7rYa5EVMlIT8"],[],null,"Giallo",null,"20",null,"Subaru",1,"","","",0],["GIsz62WNo1KQTz","Firestone ","Hornby","F9",0,["peVRZWkZX1QRzG","CfgQCUhxTOIDPm"],["Pl8M0ratb7Oe1Q"],null,"grigia",4,"80",null,"",0,"","20.5x12x13.5","",0],["GY4bSmb5n1fww7","Porsche  962C 85","Slot.it","GC",1,["oi7rYa5EVMlIT8"],[],21000,"azzurra",11,"80,90",1987,"",0,"Fouche Konrad Taylor Le Mans","18x10","9x28",1],["HYRL0bTYaKzLgY","Mitsubishi Lancer","Ninco","RA",0,["0PmTP4QJ98lIRm"],["s9dWedhl0dHMh1"],15500,"blu",8,"10",null,"",0,"Roma Barcelo","20.5x14.5x8","",0],["IT3y2Es9WTvf9P","Porsche  911 GT 3R","Hornby","SP",1,["bLXTezqCLCyxJs"],["0DH7HT3CNYOy3D"],null,"marrone",1,"00",null,"",1,"","19.5x11","9x27",0],["Ih6sMMKaNxqIvu","Porsche  911-GT1","Ninco","GT1",0,["wHTyICqE4Ts9vH"],["s9dWedhl0dHMh1"],null,"Bianca",26,"90,00",null,"",0,"Werdlinger Goodyear Dalmass","19x13x10","9x27",0],["IvfUHii2foPR9Z","Dallara Daytona DP","Sideways","GM",0,["3gyJtKb8J4KhGl"],["1QAE1Pygc9L532"],21500,"grigio blu gialla",10,"10",2011,"",0,"Angelelli Taylor Briscoe","20.2x?x11.3","9x27",1],["JLdi5wFs1CwS4I","Mc Laren MP4-12C","Hornby","GM",1,["crYNWdVsm3g4q2"],["0DH7HT3CNYOy3D"],null,"grigia",2,"10",null,"",0,"","21x15x11","9x27",0],["JZK0yh2A7IVaLv","Corvette C7R","NSR","GM",0,["RYDC1P6t92BkKT"],["LRKDZggfGYn6q7","OLaLNga7DVYWuI"],19000,"verde",null,"10",null,"",0,"","20.5x?x11","9x27",1],["JmSNgF3UftOMUp","Matra MS670","Fleishmann","GS",1,["06Hh4wzEmkDfyL","K8j1NTQPD4szP6"],[],null,"Blu",2,"60",null,"GtOld",0,"Gérard Larrousse","","",0],["K629X29KZ9cW9Q","Chevrolet Corvette L88","Hornby","TA",1,["CvVUPTINtkPRES","06Hh4wzEmkDfyL"],["0DH7HT3CNYOy3D"],19500,"Bianca Rossa",1,"70",null,"",0,"","20.5x11.5x10","",0],["KUrRYKJvJqioz5","Aston Martin Vantage N24","SCX","GM",1,["voWaB49aMnIU6T"],["0DH7HT3CNYOy3D"],null,"bianca",32,"00",null,"",1,"David Lai","20.2x?x10","9x27",0],["Kg5XYIaOxZi8ZG","Kart Rosso","Home Made","GK",0,["7EF7BrojJi5pQp","RYDC1P6t92BkKT"],["0DH7HT3CNYOy3D"],null,"Rosso",null,"",null,"",0,"","","",0],["KjiwdlY7Eg23g8","Mosler MT 900 Playboy","NSR","GT1",0,["RYDC1P6t92BkKT"],["LRKDZggfGYn6q7","OLaLNga7DVYWuI"],null,"Giallo blu",null,"00",null,"",0,"","","",1],["KtWwMztw4KtGKN","Camion Mercedes-Benz \"Bosch/Bild/Hermann Brave\" #14","GBtrack","",0,[],[],null,"Giallo/Rosso",14,"",null,"",0,"","","",0],["LWbGDi1ncRqlE3","F1 24 White","Policar ","F2",1,["wHTyICqE4Ts9vH"],["LRKDZggfGYn6q7"],null,"Bianco",null,"20",2024,"",0,"","","",0],["MiuGu3djiUeS45","Ferrari 330 P4","Hornby","GS",0,["1eEYBlEDr5r6uq","iNwyyjsgwQQBdk","06Hh4wzEmkDfyL"],["0DH7HT3CNYOy3D"],21500,"Rossa",21,"70,60",1967,"P4",1,"","21x11x10","",0],["Mizkt2UPEc9nKg","BMW Mini Cooper","Hornby","MI",1,["9ejJVrYo6eJkSW"],["0DH7HT3CNYOy3D"],null,"rossa",5,"00",null,"",1,"johncooperchallenge","19.5x13.5x8.5","",0],["MnEtkJl9KlnUXq","Lotus 72","Hornby","F7",1,["GwlUq221T8cjWf"],["Pl8M0ratb7Oe1Q"],null,"bianca blu",10,"70",null,"",0,"Lovely","21x12x14","",0],["MxxulIMq1q6b1G","Lotus C82","Scalextric","F5",1,[],["Pl8M0ratb7Oe1Q"],null,"blu",2,"60",null,"",0,"","","",0],["N7vh9iWk1bBlkD","Benetton Ford B190","Hornby","F8",1,["peVRZWkZX1QRzG","CfgQCUhxTOIDPm"],["Pl8M0ratb7Oe1Q"],null,"multicolore",19,"90",null,"",0,"","20.5x12x13.5","",0],["N87S1cqwiSfsQ5","Audi Sport Quattro Rothmans #9 - Acropolis Rally","FLY","RA",0,["QWLZQWWysgtzEK","wHTyICqE4Ts9vH","mG9fIICZ7NFXMp"],["d45jZWmhJQYXpv"],null,"Bianco/Rosso/Nero",9,"80",1982,"",0,"Michèle Mouton / Fabrizia Pons (Acropolis Rally 1982)","","",0],["N8mB7TgJWR3ww2","Porsche  911 Philips","Ninco","SP",1,["bLXTezqCLCyxJs"],["s9dWedhl0dHMh1"],null,"azzurra",26,"00",null,"",0,"Gene Villarubi","19.5x11","9x27",0],["NHEVZh8P8dsSU7","Audi R8C","Slot.it","GM",1,["7EF7BrojJi5pQp","RYDC1P6t92BkKT"],["1QAE1Pygc9L532"],null,"Grigio",10,"00",null,"",0,"","","",0],["NbIli8QcGnNcP9","Nissan R90V","Slot.it","GC",1,["wHTyICqE4Ts9vH"],[],21000,"rossa",85,"90",1990,"",0,"Wada Nakako","19.1x?x10","9x28",1],["Ne9hq7RROGe5RH","Porsche  911 GT 3R","Hornby","SP",1,["bLXTezqCLCyxJs"],["0DH7HT3CNYOy3D"],null,"blu",75,"00",null,"",1,"","19.5x11","9x27",0],["Ng76gq072mmEZc","Panoz LMP-1","FLY","GM",1,["1eEYBlEDr5r6uq"],["d45jZWmhJQYXpv"],null,"Bianco",23,"00",null,"",0,"","21x?x11","",0],["OPrd9S5kHel1nD","Dodge Viper GTS-R \"McCann Racing\" #82","Hornby","GT1",0,["crYNWdVsm3g4q2"],["0DH7HT3CNYOy3D"],null,"Blu/Bianco/Oro",82,"",null,"",0,"Michael McCann","","",0],["OU8iALurM8M4sG","Jaguar XJR-9","Scalextric","GC",1,["Q7kCQA0Tt7fKql","06Hh4wzEmkDfyL","wrkolF8IjYWy9M"],["0DH7HT3CNYOy3D"],null,"bianco rossa",5,"80,90",null,"",0,"","20x11","",0],["OVRtamWfbaXGrP","Minardi ","Hornby","F8",1,["peVRZWkZX1QRzG","CfgQCUhxTOIDPm"],["Pl8M0ratb7Oe1Q"],null,"gialla blu",24,"80",null,"",0,"","20.5x12x13.5","",0],["PAssLNBCj5Cqqw","Ford GT40","NSR","GS",0,["06Hh4wzEmkDfyL"],["LRKDZggfGYn6q7","OLaLNga7DVYWuI"],21900,"bianca",2,"70,60",null,"",0,"","20.5x?x10","",1],["PIPuX7gS3wFQ8B","Ford Taurus","Hornby","NA",0,["6XtgXaBhj2t7jv"],["0DH7HT3CNYOy3D"],20250,"mimetica blu",842,"70",null,"",0,"Ben Collins","21x12x9","25",0],["Q2rErPdZsRYPqG","Ferrari 330 P4","Hornby","GS",0,["1eEYBlEDr5r6uq","iNwyyjsgwQQBdk","06Hh4wzEmkDfyL"],["0DH7HT3CNYOy3D"],21500,"Verde",3,"70,60",1967,"P4",1,"Piper Attwood","21x11x10","",0],["QyFDjdC1tJ1KJW","JPS Renault","Scalextric","F8",1,["peVRZWkZX1QRzG","CfgQCUhxTOIDPm"],["Pl8M0ratb7Oe1Q"],17000,"Nero",11,"70,80",null,"",0,"","20.5x12x13.5","",0],["R1ir2PI7MeteLg","VW Beetle G1","Hornby","BE",1,["Znngn8YuM7MsWV","wHTyICqE4Ts9vH","mG9fIICZ7NFXMp"],["0DH7HT3CNYOy3D"],19000,"gialla",17,"10",null,"",1,"","18,5x13,5x8","9x27",0],["R6DbxlqtVBZUzh","BMW Mini Cooper","Hornby","MI",1,["9ejJVrYo6eJkSW"],["0DH7HT3CNYOy3D"],null,"gialla",6,"00",null,"",1,"johncooperchallenge","19.5x13.5x8.5","",0],["R9WXXrRTc9Y6th","Mini 1275 GT","Scalextric","MC",0,[],["0DH7HT3CNYOy3D"],null,"Giallo",1,"70",null,"",0,"","19,5x13,5x8","",0],["RAYi6YbUkLngvV","TVR Speed12","Hornby","SP",1,["wHTyICqE4Ts9vH"],["0DH7HT3CNYOy3D"],null,"Viola",5,"90",null,"",0,"","19x10","",0],["RJ1MIxU6X68Rds","Sauber ","Slot.it","GC",1,["7EF7BrojJi5pQp","RYDC1P6t92BkKT"],["1QAE1Pygc9L532"],null,"Blu",null,"00,10",null,"",1,"","","",1],["RPRqBQKm8s1Dt8","Mercedes ","Hornby","F9",1,["3gyJtKb8J4KhGl"],["Pl8M0ratb7Oe1Q"],null,"bianconera",10,"80,90",null,"",0,"","20.5x12x12","",0],["RQvHXKR0obzP9Y","Mercedes CLR","NonnoSlot","GT1",0,["wHTyICqE4Ts9vH"],[],null,"gialla",null,"10",null,"",0,"","19.1x?x10","",0],["RUzq6XNRWJ87o0","Porsche  997","Hornby","SP",1,["bLXTezqCLCyxJs"],["0DH7HT3CNYOy3D"],null,"arancione",3,"00",null,"",0,"","19.5x11","9x27",0],["T64dwbepAr0D6z","Kart Bianco","Home Made","GK",0,["7EF7BrojJi5pQp","RYDC1P6t92BkKT"],["0DH7HT3CNYOy3D"],null,"Bianco",null,"",null,"",0,"","","",0],["TBbR85J1YiqZ58","Tyrrel 006","Hornby","F7",1,["GwlUq221T8cjWf"],["Pl8M0ratb7Oe1Q"],null,"blu",9,"70",1971,"",0,"Cervert","21x12x14","",0],["TN0us1kYbOzyyV","Lotus C7","Hornby","CA",1,["znz1EZKrLW7lrA"],["0DH7HT3CNYOy3D"],21000,"bianca",null,"70",null,"",0,"","18,5x13,5x8","9x27",0],["TV4hGvH6zSmay4","Lotus C7","Hornby","CA",1,["znz1EZKrLW7lrA"],["0DH7HT3CNYOy3D"],18000,"rossa",null,"70",null,"",0,"","18,5x13,5x8","9x27",0],["U2myYi6kWmyT3D","Alfa Romeo Giulia Sprint GTAm Kent","RevoSlot","GS",0,["voWaB49aMnIU6T"],[],null,"Bianco Rosso",36,"70",1971,"Revo",0,"","20x10x9","9:24",0],["UE2nkqjXJDnsGk","Panoz LMP 1","FLY","GM",1,["1eEYBlEDr5r6uq"],["d45jZWmhJQYXpv"],null,"Nero",13,"80,90",null,"",0,"","21x?x11","",0],["UV1tiI3DbYPbIa","Venturi MVS 600","FLY","GT1",0,["RYDC1P6t92BkKT"],["d45jZWmhJQYXpv"],null,"Giallo",57,"90",1994,"",0,"Philippe Charriol","20x?x11","",0],["Upnauqh4kJ7SXA","Peugeot 307","Ninco","RA",0,["wHTyICqE4Ts9vH","mG9fIICZ7NFXMp"],["s9dWedhl0dHMh1"],15500,"rossa",5,"10",null,"",0,"Gronholm","19.7x?x8.9","",0],["VVRVDPeTrIaRX1","Marcos 600 LM \"Repsol Locura Xbox\" #5","FLY","GT1",0,["KqBcJhLNwqA94L","3s8kBQIRsz0NeP"],["d45jZWmhJQYXpv"],null,"Nero/Arancione",5,"90",null,"",0,"Cor Euser","","",0],["VZpsIuxjJvzcoW","Kart Nero","Home Made","GK",0,["7EF7BrojJi5pQp","RYDC1P6t92BkKT"],["0DH7HT3CNYOy3D"],null,"Nero Giallo",null,"",null,"",0,"","","",0],["VkfL66kVmKOB3q","Corvette C6R","NSR","GT1",0,["RYDC1P6t92BkKT"],["LRKDZggfGYn6q7","OLaLNga7DVYWuI"],16500,"rossa",null,"00,10",null,"",0,"","20.5x?x11","9x27",1],["VzUtqpNXoGoZll","Alfa 33/3","Slot.it","GS",0,["K8j1NTQPD4szP6","06Hh4wzEmkDfyL"],["1QAE1Pygc9L532"],null,"Rosso Verde",5,"10",null,"Prototipi compatti",0,"","","",1],["W0QS35LWRqnXeX","Porsche  Boxter","Hornby","SP",1,["bLXTezqCLCyxJs"],["0DH7HT3CNYOy3D"],null,"gialla",99,"00",null,"",0,"","19.5x11","9x27",0],["WmWU89of9SEbay","Ferrari F430","BBR Models","GM",0,["1eEYBlEDr5r6uq"],[],null,"Bianco Rosso Verde",28,"00",null,"",0,"Senna","21x15.5x10.5","",0],["WyRfbLrmotA3SG","Lola MG","Hornby","GM",1,["1eEYBlEDr5r6uq"],["0DH7HT3CNYOy3D"],null,"Bianca Blu",16,"00",null,"LolaFast",1,"Waiver Letzinger","21x15.5x10.5","",0],["X4vc0UgwtVfdpR","Renault Sport","Ninco","RA",0,["wHTyICqE4Ts9vH","mG9fIICZ7NFXMp"],["s9dWedhl0dHMh1"],13000,"blu",19,"10",null,"",0,"Schothorst","","",0],["XA5CxCIT1RJsRH","AIR 9.8 TVR","Hornby","SP",1,["wHTyICqE4Ts9vH"],["0DH7HT3CNYOy3D"],null,"viola grigia",91,"90",null,"",0,"","19x10","",0],["XBLmXieuImwAKx","Porsche 997 GT2","Avant Slot","GM",0,["wHTyICqE4Ts9vH"],[],null,"Bianca",197,"00,10",2006,"",0,"Lugir Rattsen","19x?x10","",1],["XWSGiDZoLFpVPl"," Brabham BT 26","Scalextric","F5",1,["GwlUq221T8cjWf"],["Pl8M0ratb7Oe1Q"],null,"gialla",8,"60",null,"",0,"Jochen Rindt","21x12x14","",0],["XeanWrxzhUmcaA","Chevrolet Impala Kellogg ","Hornby","NA",0,["6XtgXaBhj2t7jv"],["0DH7HT3CNYOy3D"],null,"Colori vari",5,"70",null,"",0,"","21x12x9","",0],["Xuq5s0eYGNBs5b","Porsche 956 \"Spirit of America\"","Slot.it","GC",0,["7EF7BrojJi5pQp","RYDC1P6t92BkKT"],["1QAE1Pygc9L532"],null,"Bianco/Rosso/Blu (bandiera USA)",8,"80",1986,"",0,"G. Follmer / J. Morton / K. Miller","","",0],["Xx36HcDV9QXZMD","Renault Megane","Hornby","RA",1,["Znngn8YuM7MsWV","wHTyICqE4Ts9vH","mG9fIICZ7NFXMp"],["0DH7HT3CNYOy3D"],20000,"gialla",24,"10",null,"",0,"","19x13x10","",0],["YFwZ0vya23inI5","Opel Kadett GT/E","RevoSlot","GS",0,["voWaB49aMnIU6T"],[],null,"Gialla rossa blu",439,"70",1970,"Revo",0,"Armin Banz","20x10x9","9:24",0],["YGqMwhTQjxs3qk","Ford Mustang","Hornby","TA",1,["CvVUPTINtkPRES","06Hh4wzEmkDfyL"],["0DH7HT3CNYOy3D"],18000,"Blu",1,"70",null,"",0,"Peter Revson","20.5x11.5x10","",0],["YmRxIzQlkRxT0q","Mc Laren MP4 - 16","Hornby","F9",1,["1eEYBlEDr5r6uq"],["Pl8M0ratb7Oe1Q"],null,"grigio nera",96,"00",null,"",0,"Kimi Raikonen","21.5x12x12","",0],["ZXq73jaYvvzW5g","Mosler MT900R","NSR","GT1",0,["RYDC1P6t92BkKT"],["LRKDZggfGYn6q7","OLaLNga7DVYWuI"],null,"Giallo",null,"00",null,"",0,"","20.5x?x11","",1],["ZZ89CAnuYSpShF","RCT TRV","Hornby","SP",1,["1eEYBlEDr5r6uq"],["0DH7HT3CNYOy3D"],null,"Rosso ",14,"90",null,"",0,"","21x15x11","",0],["ZZUAf4tr4Q5S0H","Porsche 956/962","NonnoSlot","GC",0,["wHTyICqE4Ts9vH"],[],null,"Bianca",29,"20",null,"",0,"","19.1x?x10","9:28",0],["ZcP43D7OTS0ouk","Lamborghini Gallardo","Ninco","GM",0,["KqBcJhLNwqA94L","3s8kBQIRsz0NeP"],["s9dWedhl0dHMh1"],23500,"rosso verde",8,"00",2008,"",0,"Silverstone 2008","","13X31",0],["ZnRLbGAZ2VEJwG","Porsche Moby Dick 935","Sideways","GS",0,[],["1QAE1Pygc9L532"],null,"Bianco",null,"70,80",1978,"",0,"Paul Ricard","17.3x?x8.2","11:28",1],["acmwmxvLkiepIT","Maserati MC12 Vodafone","Scalextric","GT1",1,["zKgh5wS8KOPFI5"],["0DH7HT3CNYOy3D"],21600,"Rossa",1,"00",null,"",1,"","20x15x11","",0],["apog4fyQKbofRh","Porsche  911 GT 3R","Hornby","SP",1,["bLXTezqCLCyxJs"],["0DH7HT3CNYOy3D"],null,"rossa grigia",44,"90,00",null,"",0,"","19.5x11","9x27",0],["atv6vlANCk1lye","Porsche 906 Carrera","Fleishmann","GS",1,["06Hh4wzEmkDfyL","K8j1NTQPD4szP6"],[],null,"Bianca",null,"60",null,"GtOld",0,"","","",0],["bTnm63FFesH39m","Joker","Hornby","SP",1,["CfgQCUhxTOIDPm"],["0DH7HT3CNYOy3D"],null,"Bianco viola verde ",null,"20",null,"",1,"","20.5x12x13.5","",0],["bqcwh8E4KMlpJA","Porsche 917","Scalextric","GS",1,[],["0DH7HT3CNYOy3D"],null,"Rossa",14,"60",null,"GtOld",0,"","","",0],["bujOsnYnRgBOet","Nissan R90CK","NonnoSlot","GC",0,["wHTyICqE4Ts9vH"],[],null,"Blu",null,"10",null,"",0,"","19.1x?x10","",0],["c5i0arD26AACEh","Jaguar XJR9","Scalextric","GC",1,["Q7kCQA0Tt7fKql","KqBcJhLNwqA94L","3s8kBQIRsz0NeP"],["0DH7HT3CNYOy3D"],null,"Bianco Viola",1,"80,90",null,"",0,"","20x14x10.5","",0],["c83dK3lXbDIaSC","Benetton B193","Hornby","F9",1,["peVRZWkZX1QRzG","CfgQCUhxTOIDPm"],["Pl8M0ratb7Oe1Q"],null,"gialloverde",5,"90",null,"",0,"Shumacher","20.5x12x13.5","",0],["caAEQXYRkN4P2u","BMW Mini Cooper","Hornby","MI",1,["9ejJVrYo6eJkSW"],["0DH7HT3CNYOy3D"],null,"Bianco blu",2,"00",null,"",1,"","19.5x13.5x8.5","",0],["cbo4nYZ5mzROqx","Panoz LMP 1","FLY","GM",1,[],[],null,"Rossa",9,"00",null,"",0,"Enge Janis","","",0],["cxu3jvs9if96b8","Ferrari 312 PB CL","Sloter","GS",1,["KqBcJhLNwqA94L"],[],null,"Rosso ",1,"70",1974,"Prototipi compatti",0,"Jacky Ics / Clay Regazzoni ","20.5x?x10.5","11:36",0],["d9BGwL6hUOYuDl","Ferrari ","Hornby","F9",1,["peVRZWkZX1QRzG","CfgQCUhxTOIDPm"],["Pl8M0ratb7Oe1Q"],null,"rossa",28,"80,90",null,"",0,"","20.5x12x13.5","",0],["dBSf2ANlr1c0qO","Chevron B21","FLY","GS",1,[],[],null,"Nero",13,"",null,"",0,"Quester","","",0],["dPCZRa4rpkLoBG","Porsche 962C","Slot.it","GC",1,["7EF7BrojJi5pQp","RYDC1P6t92BkKT"],["1QAE1Pygc9L532"],null,"Giallo Rosso",19,"80",null,"",0,"Andretti","","",1],["e5PMswF25Aa917","Riley MK","Sideways","GM",0,["3gyJtKb8J4KhGl"],["1QAE1Pygc9L532"],21250,"bianca rossa blu",1,"00,10",2009,"",0,"Montoya Pruett Rojas","20.2x?x11.3","9x27",1],["eikGkL9nesG2Va","Corvette C6R","NSR","GT1",0,["RYDC1P6t92BkKT"],["LRKDZggfGYn6q7","OLaLNga7DVYWuI"],19000,"Blu",null,"00,10",null,"",0,"Take no prisoners","20.5x?x11","9x27",1],["euvufBYBP7mRmz","BMW Mini Cooper S","Hornby","MI",1,["oi7rYa5EVMlIT8"],["0DH7HT3CNYOy3D"],null,"Nera",null,"00",null,"",1,"","18x10","",0],["eyG0R1Dc5kdkr8","Nissan R390 GT1","Slot.it","GT1",0,["wHTyICqE4Ts9vH"],[],null,"Rosso",3,"90",null,"",0,"","19.1x?x10","",0],["f9Sj3dA89ocy0P","Corvette C6R","NSR","GT1",0,["RYDC1P6t92BkKT"],["LRKDZggfGYn6q7","OLaLNga7DVYWuI"],19000,"bianca",72,"00,10",null,"",0,"","20.5x?x11","9x27",1],["fIJ4UvW71Dh343","Jaguar XKR GT3 #1 BFGoodrich","Scalextric","GM",0,["crYNWdVsm3g4q2"],["0DH7HT3CNYOy3D"],null,"Verde/Argento",1,"00",null,"",0,"","","",0],["fMtGP0cJKoh0pU","Ferrari 312 PB","Sloter","GS",1,["voWaB49aMnIU6T"],[],null,"Rosso ",6,"70",1972,"Prototipi compatti",0,"Schenken-Peterson ","20x10x9","9:24",0],["fVt4YiY3bZ5SxQ","Lola MG","Hornby","GM",1,["1eEYBlEDr5r6uq"],["0DH7HT3CNYOy3D"],null,"Nera/Rossa",21,"00",null,"LolaFast",1,"","21x15.5x10.5","",0],["fZ6zvAGe9905Z4","Chevrolet Camaro GS","Hornby","TA",1,["CvVUPTINtkPRES","06Hh4wzEmkDfyL"],["0DH7HT3CNYOy3D"],19000,"Blu",6,"70",1969,"",0,"Roger Penske","20.5x11.5x10","",0],["fZtVMwgKzjldfm","BMW Mini Cooper","Hornby","MI",1,["9ejJVrYo6eJkSW"],["0DH7HT3CNYOy3D"],null,"bianca rossa",1,"00",null,"",0,"johncooperchallenge","19.5x13.5x8.5","",0],["fleiubrLJzwOtr","Porsche  956 KH","Slot.it","GC",1,["oi7rYa5EVMlIT8"],[],20500,"bianco blu",2,"80",1983,"",0,"Bell Bellof Nurburgring ","18x10","9x28",1],["gNaI41P8cmD87J","Pagani Huayra Drago","Scalextric","SP",1,["crYNWdVsm3g4q2","1eEYBlEDr5r6uq"],["0DH7HT3CNYOy3D"],null,"Rosso Nero",20,"10",null,"",0,"","","",0],["gURvWo0bYNNwhq","Jaguar XJR9 ","Slot.it","GC",0,["KqBcJhLNwqA94L"],[],null,"Giallo",null,"80",null,"",0,"Cheever Dumfries Watson","20x14x10.5","",1],["gwyYBEoCI56IYu","Chevrolet Impala","Hornby","NA",1,["6XtgXaBhj2t7jv"],["0DH7HT3CNYOy3D"],null,"Colori vari",24,"70",null,"",0,"","21x12x9","",0],["hLAyvKH9WVXTnN","Porsche 962","Scalextric","GC",1,["Q7kCQA0Tt7fKql","06Hh4wzEmkDfyL","wrkolF8IjYWy9M"],["0DH7HT3CNYOy3D"],null,"Bianco blu",17,"80,90",null,"",1,"","20x11","",0],["hosoMEJNkFyg1c","SCX Tuning Series","SCX","GM",0,[],["0DH7HT3CNYOy3D"],null,"Blu/Bianco",null,"00",null,"",1,"","","",0],["i6PuKbodZyCynp","Chevrolet Camaro GS","Hornby","TA",1,["CvVUPTINtkPRES","06Hh4wzEmkDfyL"],["0DH7HT3CNYOy3D"],17500,"Gialla Nera",64,"70",1969,"",0,"","20.5x11.5x10","",0],["i7vazftJ8XtktX","VW Beetle Cabrio","Hornby","BE",1,["Znngn8YuM7MsWV","wHTyICqE4Ts9vH","mG9fIICZ7NFXMp"],["0DH7HT3CNYOy3D"],19750,"grigia",null,"10",null,"",1,"cabrio","18,5x13,5x8","9x27",0],["iFLCD1ITXHXCPE","Lola MG","Hornby","GM",1,["1eEYBlEDr5r6uq"],["0DH7HT3CNYOy3D"],null,"Rosso Blu",37,"00",null,"LolaFast",1,"Waiver Letzinger","21x15.5x10.5","",0],["iMhsk9iiFXQWT0","Lola T280 Switzerland ","Sloter","GS",1,["KqBcJhLNwqA94L"],[],null,"Giallo",7,"70",1972,"Prototipi compatti",0,"Jo Bonnier","20.5x?x10.5","11:36",0],["iVSKGYwuTMX6cQ","Ferrari ","Pro Slot","F9",1,["peVRZWkZX1QRzG","CfgQCUhxTOIDPm"],[],null,"Rossa ",1,"80,90",null,"",0,"","20.5x12x13.5","",0],["iiE5VgxUxiL5wN","Mini Challenge","Scalextric","MC",0,["k2jrFuQi3fqIB3"],["0DH7HT3CNYOy3D"],null,"Rossa",null,"70",null,"",0,"","","",0],["io0FVnnp2dHRNP","Ferrari F430","Hornby","GM",0,["1eEYBlEDr5r6uq"],["0DH7HT3CNYOy3D"],null,"rossa",1,"00",null,"",0,"","21x15.5x10.5","9x27",0],["jFpk39vyYU5YZp","Porsche 962 CK6","Hornby","GC",1,["Q7kCQA0Tt7fKql","06Hh4wzEmkDfyL","wrkolF8IjYWy9M"],["0DH7HT3CNYOy3D"],null,"Nera Rossa",10,"80,90",null,"",0,"","20x11","",0],["jTCAqYXVzKRkF1","Arrows","SCX","F8",1,["5NkimqOY5vCnUj"],[],null,"Arancio",null,"80,90",null,"",0,"","19.8x?x12.2","",0],["jnBEif9QAil8Wf","Audi TT Rossa","Hornby","SP",1,["voWaB49aMnIU6T"],["0DH7HT3CNYOy3D"],null,"rossa",9,"10",null,"",0,"","20x15x9","9x27",0],["jraL6m9XRkpUxV","VW Beetle G2","Hornby","BE",1,["Znngn8YuM7MsWV","wHTyICqE4Ts9vH","mG9fIICZ7NFXMp"],["0DH7HT3CNYOy3D"],19000,"gialla",17,"10",null,"",1,"","18,5x13,5x8","9x27",0],["kWsB5TG7ZQZAMn","Renault ","Hornby","F9",1,["peVRZWkZX1QRzG","CfgQCUhxTOIDPm"],["Pl8M0ratb7Oe1Q"],null,"biancoblu",2,"80,90",null,"",0,"","20.5x12x13.5","",0],["kanBrVL8fAWKLa","TVR T400R","Hornby","SP",1,["1eEYBlEDr5r6uq"],["0DH7HT3CNYOy3D"],null,"Nera",55,"90",null,"",0,"","21x15.5x10.5","",0],["kgJifwg2y3rRib","Chevrolet Corvette L88","Hornby","TA",1,["CvVUPTINtkPRES","06Hh4wzEmkDfyL"],["0DH7HT3CNYOy3D"],null,"Rossa Blu",57,"70",null,"",1,"Heinz Johnson","20.5x11.5x10","",0],["knSQUVtFL2CTfs","Skoda Fabia","Hornby","RA",0,["zAopTCRaXfzwFy"],["0DH7HT3CNYOy3D"],17000,"bianco verde",14,"10",null,"",0,"Auriol Girardet","20,5x8","",0],["ks2cGnefwJinwG","Ferrari 330 P4","Hornby","GS",0,["1eEYBlEDr5r6uq","iNwyyjsgwQQBdk","06Hh4wzEmkDfyL"],["0DH7HT3CNYOy3D"],21500,"Rossa",4,"70,60",1967,"P4",1,"","21x11x10","",0],["lPfTueW8IcAtHa","Lola MG","Hornby","GM",1,["1eEYBlEDr5r6uq"],["0DH7HT3CNYOy3D"],null,"Bianco ",17,"00",null,"",0,"","21x15.5x10.5","",0],["ljB12Qcg1ke0zC","Alfa Tipo 33","Fleishmann","GS",1,["06Hh4wzEmkDfyL","K8j1NTQPD4szP6"],[],null,"Blu",null,"80,90",null,"GtOld",0,"","19.1x?x10","",0],["mVNM83fGjNbXOY","Ferrari 330 P4","Hornby","GS",0,["1eEYBlEDr5r6uq","iNwyyjsgwQQBdk","06Hh4wzEmkDfyL"],["0DH7HT3CNYOy3D"],19500,"Rossa",24,"70,60",1967,"P4",1,"","21x11x10","",0],["n9XPiIMbvUZka2","Ferrari 312 PB CL","Sloter","GS",1,["KqBcJhLNwqA94L"],[],null,"Rosso ",2,"70",1972,"Prototipi compatti",0,"Jacky Ics / Mario Andretti","20.5x?x10.5","11:36",0],["nBv6ksaftdEGJZ","Seat Cupra GT","SCX","GM",0,[],["0DH7HT3CNYOy3D"],13600,"Giallo Rosso",1,"00",null,"",1,"","19x?x8.6","",0],["nFmgpZhrBUyIch","Pagani Zonda R","Slot.it","GT1",0,["wHTyICqE4Ts9vH"],[],null,"Grigio",null,"00",null,"",0,"","19.1x?x10","",0],["nIcq8eJzuVvmV5","Cooper C81","Scalextric","F5",1,[],["Pl8M0ratb7Oe1Q"],null,"bianca",4,"60",null,"",0,"","","",0],["nQcvV9KjV42a4J","Ferrari 330 P4","Hornby","GS",0,["1eEYBlEDr5r6uq","iNwyyjsgwQQBdk","06Hh4wzEmkDfyL"],["0DH7HT3CNYOy3D"],19000,"Rossa",3,"70,60",1967,"P4",1,"","21x11x10","",0],["nREryA8xXJtaAH","F1 24 Red","Policar ","F2",1,["wHTyICqE4Ts9vH"],["LRKDZggfGYn6q7"],null,"Rosso",null,"20",2024,"",0,"","","",0],["nbu12Jjxi8lLwB","Honda NSX JGTC \"EPSON PIAA Castrol\" #32","Ninco","GT1",0,["06Hh4wzEmkDfyL","wrkolF8IjYWy9M"],["s9dWedhl0dHMh1"],null,"Bianco/Blu",32,"",null,"",0,"","","",0],["nrYEAcrEvkMiZc","Ford Taurus","Hornby","NA",0,["6XtgXaBhj2t7jv"],["0DH7HT3CNYOy3D"],19500,"mimetica",84,"70",null,"",0,"Ben Collins","21x12x9","24",0],["nygb1HcJz7dNHR","VW Beetle V1","Hornby","BE",1,["Znngn8YuM7MsWV","wHTyICqE4Ts9vH","mG9fIICZ7NFXMp"],["0DH7HT3CNYOy3D"],19500,"verde",18,"10",null,"",1,"","18,5x13,5x8","9x27",0],["oCQmHPRtsCaJnI","Benetton B195","Hornby","F9",1,["peVRZWkZX1QRzG","CfgQCUhxTOIDPm"],["Pl8M0ratb7Oe1Q"],null,"blu azzurra",2,"90",null,"",0,"","20.5x12x13.5","",0],["ob9r7wm0xz1xnl","Mercedes 300 SLR","Slot.it","GS",0,["6YAT6Z86Q7QKVm"],[],null,"Grigio",722,"‘50",null,"",0,"Denis Jenkinson \"Jean\"","23x14x7","9:27",0],["pqFOb6dC5GhSiC","BMW Mini Cooper","Hornby","MI",1,["9ejJVrYo6eJkSW"],["0DH7HT3CNYOy3D"],null,"Rossa ",2,"00",null,"",1,"","19.5x13.5x8.5","",0],["qTNSa00Kugm5P4","Chevron B21","FLY","GS",1,["oi7rYa5EVMlIT8"],["d45jZWmhJQYXpv"],null,"Bianco",38,"70",1972,"Prototipi compatti",0,"Dieter Quester","18x?x10","",0],["qY2BrPNUhxsTQd","Riley MK Aim Autosport","Sideways","GM",0,["3gyJtKb8J4KhGl"],["1QAE1Pygc9L532"],21000,"bianco blu",61,"00,10",2010,"",0,"Wilkins  Frisselle","20.2x?x11.3","9x27",1],["qofLM1Hop6lpuy","Chevron B21 \"Tergal\" Red Rose Racing #5","GBtrack","GS",0,[],["d45jZWmhJQYXpv"],null,"Giallo/Verde",5,"",1972,"Prototipi compatti",0,"José Juncadella (Escuderia Montjuich)","","",0],["r2f69lICjVxSDN","Subaru BRZ","Policar","SP",1,["oi7rYa5EVMlIT8"],[],null,"Blu",null,"20",null,"Subaru",1,"","","",0],["rGjGEvQqmc5Jd3","Aston Martin DBR9","Scalextric","GM",1,["1eEYBlEDr5r6uq"],["0DH7HT3CNYOy3D"],null,"Azzurro/nera",9,"00",null,"",0,"","21x15.5x10.5","",0],["rrwGXiK56JwA7y","BMW Mini Cooper","Hornby","MI",1,["9ejJVrYo6eJkSW"],["0DH7HT3CNYOy3D"],null,"verde",27,"00",null,"",1,"robert stern challenge","19.5x13.5x8.5","",0],["s5ygfKwEG1vqLc","Corvette C8R","NSR","GM",0,["RYDC1P6t92BkKT"],["LRKDZggfGYn6q7","OLaLNga7DVYWuI"],19000,"Arancione ",null,"10",null,"",0,"","20.5x?x11","9x27",1],["seakso1b4REtFD","Lola MG","Hornby","GM",1,["1eEYBlEDr5r6uq"],["0DH7HT3CNYOy3D"],null,"Nera/Gialla",80,"00",null,"LolaFast",1,"","21x15.5x10.5","",0],["sk78etsuOz4hOE","Lotus C7","Hornby","CA",1,["znz1EZKrLW7lrA"],["0DH7HT3CNYOy3D"],18000,"azzurra",19,"70",null,"",0,"Suzuki Motul","18,5x13,5x8","9x27",0],["st2d86h6bY0JZ9","TVR Starco","Hornby","SP",1,["tMA5rXsfJjxWMD","KqBcJhLNwqA94L","3s8kBQIRsz0NeP"],[],null,"Rosso ",14,"90",null,"",0,"","","",0],["t3VTrFEVbowkrj","McLaren GTR ","Scalextric","GT1",1,[],["0DH7HT3CNYOy3D"],null,"Nera",59,"90",1995,"",1,"Limited edition","","9:27",0],["t3s8v3KUwB0qpf","Lancia WRC 037","FLY","RA",1,["QWLZQWWysgtzEK","wHTyICqE4Ts9vH","mG9fIICZ7NFXMp"],["d45jZWmhJQYXpv"],21500,"Bianco Verde",2,"80",null,"",0,"","18x?x9","",0],["tAvzh550hJA4TK","Dallara Daytona DP","Sideways","GM",0,["3gyJtKb8J4KhGl"],["1QAE1Pygc9L532"],20000,"gialla blu",10,"10",2009,"",0,"Angelelli Frisselle Taylor","20.2x?x11.3","9x27",1],["tHp7c7l8AtmKoB","Mosler MT900R #24 Perspective Racing (Daytona)","Ninco","GT1",0,["RYDC1P6t92BkKT"],["s9dWedhl0dHMh1"],null,"Arancione/Blu",24,"00",2002,"",0,"João Barbosa / Michel Neugarten / Thierry Perrier (Daytona 2002)","","",0],["ta65MZJcvW6UOw","Alfa Romeo 156 GTA Pearle","FLY","GS",1,[],[],null,"Verde acqua / bianco scacchi",10,"00",null,"",0,"Boy Zentveldt","","",0],["tedu6rQVHtKJVm","VW Beetle","Hornby","BE",1,["Znngn8YuM7MsWV","wHTyICqE4Ts9vH","mG9fIICZ7NFXMp"],["0DH7HT3CNYOy3D"],null,"Rossa",3,"10",null,"",1,"","19x13x10","",0],["tmcFw8CgasxN2E","Mercedes CLK DTM AMG Vodafone #2","Hornby","GM",0,["wHTyICqE4Ts9vH"],[],null,"Nero/Argento",2,"",null,"",0,"Jean Alesi","19x10","",0],["tt6azlxLC9VmH7","Porsche GT1 EVO \"Team Gunnar\" #6 Highcroft Racing","GBtrack","GT1",0,["wHTyICqE4Ts9vH","mG9fIICZ7NFXMp"],[],null,"Argento/Grigio",6,"",null,"",0,"","","",0],["u9X7mXpPtAM3fl","Lola MG","Spirit","GM",1,["1eEYBlEDr5r6uq"],[],null,"Nera",37,"00",null,"",0,"","21x15.5x10.5","",0],["uHVcfEFeOE1lmo","Williams FW10","Hornby","F8",1,["peVRZWkZX1QRzG","CfgQCUhxTOIDPm"],["Pl8M0ratb7Oe1Q"],null,"biancoblu",5,"80",null,"",0,"","20.5x12x13.5","",0],["uVxDS3o8yDj3MA","Lotus C7","Hornby","CA",1,["znz1EZKrLW7lrA"],[],18500,"gialla",99,"70",null,"",0,"","18,5x13,5x8","9x27",0],["vJv1MC0FFwyV8K","Kart Blu","Home Made","GK",0,["7EF7BrojJi5pQp","RYDC1P6t92BkKT"],["0DH7HT3CNYOy3D"],null,"Blu",null,"",null,"",0,"","","",0],["vSaveFiVom5xYW","Lola T290","Sloter","GS",1,["KqBcJhLNwqA94L"],[],null,"Azzurro ",18,"70",1972,"Prototipi compatti",0,"Edwards","20.5x?x10.5","11:36",0],["vgxxGnGA1HCn6n","Pagani Huayra Drago","Scalextric","SP",1,["crYNWdVsm3g4q2","1eEYBlEDr5r6uq"],["0DH7HT3CNYOy3D"],null,"Viola",20,"10",null,"",0,"","","",0],["wH2jELiq9IzdOk","Mc Laren ","Hornby","F9",1,["peVRZWkZX1QRzG","CfgQCUhxTOIDPm"],["Pl8M0ratb7Oe1Q"],null,"biancorossa",7,"80",null,"",0,"","20.5x12x13.5","",0],["wcqWIi5rzo4ofi","Renault Megane","Hornby","RA",1,["Znngn8YuM7MsWV","wHTyICqE4Ts9vH","mG9fIICZ7NFXMp"],["0DH7HT3CNYOy3D"],19250,"blu",7,"10",null,"",0,"Team Diac","19x13x10","",0],["wzh5ALIln6Nru0","Ford Focus","Hornby","RA",0,["0PmTP4QJ98lIRm"],["0DH7HT3CNYOy3D"],20000,"bianca",4,"10",null,"",0,"Martin Park","20.5x14.5x8","",0],["x7TOPRRLRed30O","Mitsubishi Lancer","Ninco","RA",0,["0PmTP4QJ98lIRm"],["s9dWedhl0dHMh1"],15500,"rossa",null,"10",2005,"",0,"Rovenpert Panizzi Galli","20.5x14.5x8","",0],["x7qVNcKDtDsd5n","Citroen Xsara T4","SCX","RA",0,["KqBcJhLNwqA94L","3s8kBQIRsz0NeP"],["0DH7HT3CNYOy3D"],14500,"rossa bianca",19,"10",null,"",0,"Sainz Marti","20x14.2x10.5","",0],["xSXLboAqItkOp8","Porsche wsc95 team Joest","FLY","GM",1,["RYDC1P6t92BkKT"],["d45jZWmhJQYXpv"],null,"Grigia",0,"80,90",null,"",0,"","20x?x11","",0],["xpBhoG26Ty7YRm","Ford Taurus","Hornby","NA",0,["6XtgXaBhj2t7jv"],["0DH7HT3CNYOy3D"],19500,"union jack",48,"70",null,"",0,"","21x12x9","24",0],["xsJ31WL3CPFRuh","Alfa Romeo TZ2","FLY","GS",0,["QWLZQWWysgtzEK","wHTyICqE4Ts9vH","mG9fIICZ7NFXMp"],["d45jZWmhJQYXpv"],null,"Rosso",41,"60",null,"",0,"Bussinello, Rolland","19x?x11","",1],["y7nhXMtITuARHp","Porsche 935 K3","FLY","GC",0,["QWLZQWWysgtzEK","wHTyICqE4Ts9vH","mG9fIICZ7NFXMp"],["d45jZWmhJQYXpv"],null,"Blu",9,"",null,"",0,"Garretson Rahal Redman","19x?x11","",1],["yBRd3IJqsKvfEW","Toyota 88C","Slot.it","GC",1,["oi7rYa5EVMlIT8"],[],21750,"bianco rossa",45,"80",1988,"",0,"Andskar Gilbert-Scott","18x10","9x28",1],["yZ7gWsteHcGSza","Lola T280 V8","Sloter","GS",1,["KqBcJhLNwqA94L"],[],null,"Giallo",12,"70",1972,"Prototipi compatti",0,"Wisell","20.5x?x10.5","11:36",0],["yaJeHwKXZFjTl6","Renault R25","Hornby","F9",1,["1eEYBlEDr5r6uq"],["Pl8M0ratb7Oe1Q"],null,"gialloblu",7,"00",null,"",0,"","21.5x12x12","",0],["ycF47v0FLtV5kF","Alfa Romeo Giulia sprint GTAm Kent","RevoSlot","GS",0,["voWaB49aMnIU6T"],[],null,"Bianco Oro",44,"70",1971,"Revo",0,"Simonis & Goris","20x10x9","9:24",0],["ydha4cbdbJ8CN7","Ferrari Pironi","NonnoSlot","F8",0,["rtvSnPXwUgtTya"],["v0rmgNOimUIBfu"],21500,"rossa",28,"80",null,"",0,"Pironi","","9x27",0],["zCpM0OYUlRnJXj","Renault Prost","NonnoSlot","F8",0,["rtvSnPXwUgtTya"],["v0rmgNOimUIBfu"],21500,"gialla",15,"80",null,"",0,"Prost","","9x27",0],["zFsvTK6ADN4Gad","Nissan R390 GT1 Green","TeamSlot","GT1",0,["wHTyICqE4Ts9vH","mG9fIICZ7NFXMp"],[],null,"Verde",33,"90,00",null,"",0,"Takota Masami Satoshi","20x11","",0],["zJb544xfQQAL8Y","Subaru BRZ","Policar","SP",1,["oi7rYa5EVMlIT8"],[],13500,"Argento",null,"20",null,"Subaru",1,"Modello da battaglia","","",0],["zQ5pjJG2LyQiJ2","Ford Taurus","Hornby","NA",0,["6XtgXaBhj2t7jv"],["0DH7HT3CNYOy3D"],21500,"nera",45,"70",null,"",0,"Robo Racer","21x12x9","29",0],["zZg2el9Hb4jodu","F1 24 Blu","Policar ","F2",1,["wHTyICqE4Ts9vH"],["LRKDZggfGYn6q7"],null,"Blu",null,"20",2024,"",0,"","","",0],["zdVElEFgcaLDIH","Mitsubishi Lancer","Hornby","RA",0,["0PmTP4QJ98lIRm"],[],21500,"rossa",8,"10",null,"",0,"McRae Senior","20.5x14.5x8","",0],["zl8eovsjYoksLp","Audi TT Blu","Hornby","SP",1,["voWaB49aMnIU6T"],["0DH7HT3CNYOy3D"],null,"blu",5,"10",null,"",0,"","20x15x9","9x27",0],["zyYCXMJttdIU5e","Chevrolet Camaro GS","Hornby","TA",1,["CvVUPTINtkPRES","06Hh4wzEmkDfyL"],["0DH7HT3CNYOy3D"],16000,"rosso blu gialla",9,"70",2014,"",0,"Stevenson","20.5x11.5x10","",0]],"ty":{"06Hh4wzEmkDfyL":"SuperGrip Tread posteriore (stile vintage, es. GT40)","0PmTP4QJ98lIRm":"MAX Grip Rally (Ford Focus, Mitsubishi Lancer, Subaru Impreza, Audi Sport Quattro)","1eEYBlEDr5r6uq":"UltraGrip (per cerchi 17\")","3gyJtKb8J4KhGl":"SuperGrip DTM","3s8kBQIRsz0NeP":"UltraGrip Tread posteriore (prototipi Group C)","5NkimqOY5vCnUj":"SuperGrip","6XtgXaBhj2t7jv":"MAX Grip Nascar (Ford Taurus, Pontiac Grand Prix, Chevrolet Impala)","6YAT6Z86Q7QKVm":"SuperGrip Slick posteriore (cerchi Ø17mm, rif. 5007, vintage stretta)","7EF7BrojJi5pQp":"Slick posteriore standard GT/LMP (F40, 962C, 956, R8C, Sauber)","9ejJVrYo6eJkSW":"MAX Grip BMW Mini Cooper","CfgQCUhxTOIDPm":"SuperGrip F1","CvVUPTINtkPRES":"MAX Grip American Classics posteriore (Camaro, Corvette, Mustang, Torino)","GwlUq221T8cjWf":"Large Super Slix F1 anni '70 posteriore (Lotus 72, McLaren M23)","K8j1NTQPD4szP6":"Slick posteriore vintage (Alfa 33, Ferrari 312PB, Matra MS670)","KqBcJhLNwqA94L":"SuperGrip Tread posteriore (prototipi Group C)","PIeMHsuBtiYbpA":"MAX Grip Porsche 911 GT3/Opel Astra/Mercedes DTM/Maserati Trofeo","Q7kCQA0Tt7fKql":"MAX Grip Porsche 962/Jaguar XJR9/Sauber Mercedes C9","QWLZQWWysgtzEK":"Neumaticos trasero (Lancia 037, Audi Quattro A2, Alfa TZ2, Porsche 911)","RYDC1P6t92BkKT":"SuperGrip Slick posteriore (chassis GT/Mosler, cerchi Ø16mm)","WLRP67uyCM7UMI":"Neumaticos del/tras (Chevron B21, Porsche 917 LH/K, Porsche 908/02)","Znngn8YuM7MsWV":"MAX Grip VW Beetle/Toyota Corolla/TVR Speed 12/Renault Megane","bLXTezqCLCyxJs":"52 60 L (NSR 19,5x11)","crYNWdVsm3g4q2":"MAX Grip Cadillac Northstar LMP/McLaren MP4-12C/Dodge Viper/Jaguar XKR","iNwyyjsgwQQBdk":"MAX Grip Ferrari 330 P4 posteriore","k2jrFuQi3fqIB3":"Sport+ Mini Challenge / BMW Mini (rear)","kAtDI61ptBmAgX":"MAX Grip JGTC (Toyota Supra/Takara, Honda NSX, Nissan 350Z)","mG9fIICZ7NFXMp":"UltraGrip Rally","oi7rYa5EVMlIT8":"SuperGrip Slick posteriore (cerchi Ø17mm, rif. 5004)","peVRZWkZX1QRzG":"MAX Grip F1 anni '80-'90 posteriore (Benetton, Minardi, Williams)","rtvSnPXwUgtTya":"Pneumatici F1 Soft posteriori per F1 storiche anni '70-'80","tMA5rXsfJjxWMD":"MAX Grip MG Lola/TVR Tuscan/Aston Martin DBR9/Lamborghini Gallardo","voWaB49aMnIU6T":"SuperGrip Big Rally","wHTyICqE4Ts9vH":"SuperGrip Rally","wrkolF8IjYWy9M":"UltraGrip Tread posteriore (stile vintage, es. GT40)","zAopTCRaXfzwFy":"MAX Grip Skoda Fabia/Peugeot 307/Ford Fiesta WRC/BMW Mini Countryman WRC","zKgh5wS8KOPFI5":"MAX Grip Lister Storm/Maserati MC12/McLaren SLR/Ford GT 2003","znz1EZKrLW7lrA":"MAX Grip Lotus 7 / Caterham 7 (Car Restorations)"},"mo":{"0DH7HT3CNYOy3D":"S-Can Standard","1QAE1Pygc9L532":"Flat-6","LRKDZggfGYn6q7":"King 21 Evo/3","OLaLNga7DVYWuI":"Shark 25 Evo","Pl8M0ratb7Oe1Q":"Slim Can F1","UYyHMNNXXGz9lS":"S-Can Standard","d45jZWmhJQYXpv":"Short Can Standard","s9dWedhl0dHMh1":"NC5","v0rmgNOimUIBfu":"Flat 6R"},"date":"08/11/2026"};const TRM={"0a6u5hiYspbzU2":"22T","1Q3PF0WfpJ50Sb":"20T","1XofqA5WA91170":"19T","1fAlbe8PKZpLvK":"25T","1xmPSUpFcdVWsI":"17T","2JIaiFvNRt8s9p":"23T","2L3P3e8VXYEbLJ":"22T","2Xpq5592N6HT94":"23T","2dgTtRNfHfbIAR":"19T","2vmoamm17RtbAJ":"22T","3IhzHCDCbN5Muo":"23T","3UzeKwcfzcwjo9":"18T","48GxWwF538UMz0":"17T","4D5HTttWPkSdqP":"22T","4QSn4j1YUEKZf8":"18T","4jhsJiOGWcGODy":"26-30","4kw9Wwh7xc6QHM":"17T","4p3E6VgcpsaKWY":"21T","52U8gPHnt8A1rI":"25T","5C7xXckIOLqetH":"21T","5EkytxGhjn6aJR":"25T","5YMmIhe0PZyn2m":"25T","5atSgp578z3SCz":"21T","6A1nK1Ihtm0D5y":"22T","6iZpDcRacEOuKw":"21T","6pqfiEyMWaJxLG":"21T","7KKOZND8rbeD0c":"17T","7iFhFzjnqR8ZXW":"23T","7r7TY6Vaxly4Ly":"19T","7tcSFAc5FEnnlR":"21T","7w8WfhAhiI51ly":"20T","84E3oqI1d1gJru":"18T","89OiEo2JKBUzFN":"26-30","8DdpyZwkQ0HmSS":"17T","8Pzqva0giRLHnp":"19T","8e1Hkgy9kfiA2q":"21T","8vBDHDmYRQpLxg":"26-30","9Dme4NGFdrr4YY":"23T","9gOEoEYIrTnZk0":"22T","9tYhw8KWi9ykkY":"20T","AHLtb244jTBE3m":"21T","Ag6AMk2zSbDXlD":"25T","Aqj9pklxcReXVq":"25T","Awnu1oUHt619lP":"20T","B7BuXZyT7SxDRq":"19T","BHtuJncL50wKsk":"25T","BZIUx6r2Yc6FrO":"22T","BcJKeDKcgDC0XQ":"26-30","BpsJLRkJFQ4HbZ":"17T","CSvkuv9jLBAo1j":"20T","ChCiGgEEO4cZOs":"23T","DhYTyWu8RfXjpN":"18T","DpL7f8vYqGwBCx":"21T","Dr8YWdjzMSG3bb":"18T","E7Ru54eKg11L9N":"19T","ED1GLw0QLBquvJ":"25T","EPWLS2GZakaYqD":"23T","EYjGXNwCfprXVu":"21T","EZaWmiekybyIpQ":"21T","Ecu3Z7SbGuh2Gr":"17T","ElkFfusuDUVf54":"99 KO","FCpualrOKF2ADD":"18T","FEWoAr7o9DRP7K":"18T","Fd4WVQraN4LSMw":"25T","GCrqo5ENVfwHwL":"19T","GIsz62WNo1KQTz":"22T","GY4bSmb5n1fww7":"16T","HYRL0bTYaKzLgY":"23T","IT3y2Es9WTvf9P":"20T","Ih6sMMKaNxqIvu":"24T","IvfUHii2foPR9Z":"22T","JLdi5wFs1CwS4I":"20T","JZK0yh2A7IVaLv":"21T","JmSNgF3UftOMUp":"26-30","K629X29KZ9cW9Q":"17T","KUrRYKJvJqioz5":"19T","Kg5XYIaOxZi8ZG":"24T","KjiwdlY7Eg23g8":"21T","KtWwMztw4KtGKN":"99 KO","LWbGDi1ncRqlE3":"17T","MiuGu3djiUeS45":"24T","Mizkt2UPEc9nKg":"20T","MnEtkJl9KlnUXq":"18T","MxxulIMq1q6b1G":"26-30","N7vh9iWk1bBlkD":"22T","N87S1cqwiSfsQ5":"23T","N8mB7TgJWR3ww2":"24T","NHEVZh8P8dsSU7":"17T","NbIli8QcGnNcP9":"16T","Ne9hq7RROGe5RH":"20T","Ng76gq072mmEZc":"19T","OPrd9S5kHel1nD":"99 KO","OU8iALurM8M4sG":"25T","OVRtamWfbaXGrP":"22T","PAssLNBCj5Cqqw":"21T","PIPuX7gS3wFQ8B":"22T","Q2rErPdZsRYPqG":"24T","QyFDjdC1tJ1KJW":"22T","R1ir2PI7MeteLg":"23T","R6DbxlqtVBZUzh":"20T","R9WXXrRTc9Y6th":"25T","RAYi6YbUkLngvV":"18T","RJ1MIxU6X68Rds":"17T","RPRqBQKm8s1Dt8":"22T","RQvHXKR0obzP9Y":"21T","RUzq6XNRWJ87o0":"19T","T64dwbepAr0D6z":"24T","TBbR85J1YiqZ58":"25T","TN0us1kYbOzyyV":"21T","TV4hGvH6zSmay4":"21T","U2myYi6kWmyT3D":"25T","UE2nkqjXJDnsGk":"19T","UV1tiI3DbYPbIa":"23T","Upnauqh4kJ7SXA":"23T","VVRVDPeTrIaRX1":"25T","VZpsIuxjJvzcoW":"24T","VkfL66kVmKOB3q":"21T","VzUtqpNXoGoZll":"22T","W0QS35LWRqnXeX":"18T","WmWU89of9SEbay":"24T","WyRfbLrmotA3SG":"17T","X4vc0UgwtVfdpR":"23T","XA5CxCIT1RJsRH":"18T","XBLmXieuImwAKx":"21T","XWSGiDZoLFpVPl":"26-30","XeanWrxzhUmcaA":"23T","Xuq5s0eYGNBs5b":"25T","Xx36HcDV9QXZMD":"22T","YFwZ0vya23inI5":"25T","YGqMwhTQjxs3qk":"17T","YmRxIzQlkRxT0q":"21T","ZXq73jaYvvzW5g":"21T","ZZ89CAnuYSpShF":"20T","ZZUAf4tr4Q5S0H":"22T","ZcP43D7OTS0ouk":"22T","ZnRLbGAZ2VEJwG":"23T","acmwmxvLkiepIT":"19T","apog4fyQKbofRh":"18T","atv6vlANCk1lye":"26-30","bTnm63FFesH39m":"18T","bqcwh8E4KMlpJA":"26-30","bujOsnYnRgBOet":"21T","c5i0arD26AACEh":"25T","c83dK3lXbDIaSC":"23T","caAEQXYRkN4P2u":"20T","cbo4nYZ5mzROqx":"99 KO","cxu3jvs9if96b8":"20T","d9BGwL6hUOYuDl":"22T","dBSf2ANlr1c0qO":"24T","dPCZRa4rpkLoBG":"17T","e5PMswF25Aa917":"22T","eikGkL9nesG2Va":"21T","euvufBYBP7mRmz":"20T","eyG0R1Dc5kdkr8":"22T","f9Sj3dA89ocy0P":"21T","fIJ4UvW71Dh343":"25T","fMtGP0cJKoh0pU":"20T","fVt4YiY3bZ5SxQ":"17T","fZ6zvAGe9905Z4":"17T","fZtVMwgKzjldfm":"20T","fleiubrLJzwOtr":"16T","gNaI41P8cmD87J":"17T","gURvWo0bYNNwhq":"22T","gwyYBEoCI56IYu":"22T","hLAyvKH9WVXTnN":"25T","hosoMEJNkFyg1c":"24T","i6PuKbodZyCynp":"18T","i7vazftJ8XtktX":"23T","iFLCD1ITXHXCPE":"17T","iMhsk9iiFXQWT0":"20T","iVSKGYwuTMX6cQ":"26-30","iiE5VgxUxiL5wN":"25T","io0FVnnp2dHRNP":"18T","jFpk39vyYU5YZp":"25T","jTCAqYXVzKRkF1":"21T","jnBEif9QAil8Wf":"17T","jraL6m9XRkpUxV":"23T","kWsB5TG7ZQZAMn":"22T","kanBrVL8fAWKLa":"18T","kgJifwg2y3rRib":"17T","knSQUVtFL2CTfs":"23T","ks2cGnefwJinwG":"24T","lPfTueW8IcAtHa":"20T","ljB12Qcg1ke0zC":"26-30","mVNM83fGjNbXOY":"24T","n9XPiIMbvUZka2":"20T","nBv6ksaftdEGJZ":"24T","nFmgpZhrBUyIch":"22T","nIcq8eJzuVvmV5":"26-30","nQcvV9KjV42a4J":"24T","nREryA8xXJtaAH":"17T","nbu12Jjxi8lLwB":"25T","nrYEAcrEvkMiZc":"22T","nygb1HcJz7dNHR":"23T","oCQmHPRtsCaJnI":"23T","ob9r7wm0xz1xnl":"23T","pqFOb6dC5GhSiC":"20T","qTNSa00Kugm5P4":"20T","qY2BrPNUhxsTQd":"22T","qofLM1Hop6lpuy":"24T","r2f69lICjVxSDN":"19T","rGjGEvQqmc5Jd3":"19T","rrwGXiK56JwA7y":"20T","s5ygfKwEG1vqLc":"21T","seakso1b4REtFD":"17T","sk78etsuOz4hOE":"21T","st2d86h6bY0JZ9":"18T","t3VTrFEVbowkrj":"19T","t3s8v3KUwB0qpf":"25T","tAvzh550hJA4TK":"22T","tHp7c7l8AtmKoB":"23T","ta65MZJcvW6UOw":"20T","tedu6rQVHtKJVm":"23T","tmcFw8CgasxN2E":"24T","tt6azlxLC9VmH7":"99 KO","u9X7mXpPtAM3fl":"21T","uHVcfEFeOE1lmo":"23T","uVxDS3o8yDj3MA":"21T","vJv1MC0FFwyV8K":"24T","vSaveFiVom5xYW":"20T","vgxxGnGA1HCn6n":"17T","wH2jELiq9IzdOk":"22T","wcqWIi5rzo4ofi":"22T","wzh5ALIln6Nru0":"23T","x7TOPRRLRed30O":"23T","x7qVNcKDtDsd5n":"23T","xSXLboAqItkOp8":"19T","xpBhoG26Ty7YRm":"22T","xsJ31WL3CPFRuh":"25T","y7nhXMtITuARHp":"23T","yBRd3IJqsKvfEW":"16T","yZ7gWsteHcGSza":"20T","yaJeHwKXZFjTl6":"21T","ycF47v0FLtV5kF":"25T","ydha4cbdbJ8CN7":"21T","zCpM0OYUlRnJXj":"21T","zFsvTK6ADN4Gad":"23T","zJb544xfQQAL8Y":"19T","zQ5pjJG2LyQiJ2":"22T","zZg2el9Hb4jodu":"17T","zdVElEFgcaLDIH":"23T","zl8eovsjYoksLp":"17T","zyYCXMJttdIU5e":"19T"};
+const CL={GT1:"GT1 · '90-2000",GM:"GT Moderne · '00",GS:"GT Storiche · '50-'70",GC:"Group C · '80-'90",SP:"Sportive e Supercars",F5:"F1 '50-'60",F7:"F1 '70-'80",F8:"F1 '80-'90",F9:"F1 '90-'10",F2:"F1 2020",RA:"Rally WRC",TA:"Trans-Am",NA:"Nascar",MI:"Mini",MC:"Mini Challenge",BE:"Beetle",CA:"Caterham 7",GK:"Go Kart","":"(senza classe)"};
+const ORD=Object.keys(CL);
+const CAT={GT1:'GT Le Mans',GM:'GT Le Mans',GS:'GT Le Mans',GC:'GT Le Mans',SP:'Stradali',MI:'Stradali',MC:'Stradali',BE:'Stradali',CA:'Stradali',TA:'Stradali',F5:'F1',F7:'F1',F8:'F1',F9:'F1',F2:'F1',RA:'WRC',NA:'Nascar',GK:'Kart'};
+const MOTOR_RPM={};
+const cars=D.cars.map(a=>({id:a[0],n:a[1],mk:a[2],cl:a[3],mg:a[4],ty:a[5].map(t=>D.ty[t]||t),mo:a[6].map(m=>D.mo[m]||m),rpm:a[7],col:a[8],num:a[9],pe:a[10]?a[10].split(","):[],yr:a[11],sub:a[12],luci:a[13],tr:TRM[a[0]]||'',cat:CAT[a[3]]||'(senza categoria)',pil:a[14],gm:(a[15]||"").trim(),rap:a[16],teca:a[17]}));
+cars.forEach(c=>{c.trn=c.tr==='99 KO'?99:(parseInt(c.tr)||null);const m=c.gm.replace(/,/g,".").match(/^(\d+(?:\.\d+)?)/);c.dia=m?parseFloat(m[1]):null;c.era=c.pe.length?c.pe[c.pe.length-1]:""});
+const $=s=>document.querySelector(s),esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const uniq=a=>[...new Set(a)].filter(x=>x!=="").sort();
+const eraList=uniq(cars.flatMap(c=>c.pe)).sort();
+const trLabels=uniq(cars.map(c=>c.tr)).sort((a,b)=>(parseInt(a)||99)-(parseInt(b)||99));
+const mkList=uniq(cars.map(c=>c.mk)),moList=uniq(cars.flatMap(c=>c.mo));
+function opts(sel,items,all){$(sel).innerHTML=`<option value="">${all}</option>`+items.map(i=>Array.isArray(i)?`<option value="${esc(i[0])}">${esc(i[1])}</option>`:`<option>${esc(i)}</option>`).join("")}
+const clOpts=ORD.filter(k=>cars.some(c=>c.cl===k)).map(k=>[k,CL[k]+` (${cars.filter(c=>c.cl===k).length})`]);
+const catList=uniq(cars.map(c=>c.cat));["#fcl","#gcl"].forEach(s=>opts(s,catList.map(k=>[k,k+" ("+cars.filter(c=>c.cat===k).length+")"]),"Tutte"));
+["#fmk","#gmk"].forEach(s=>opts(s,mkList,"Tutti"));opts("#gmo",moList,"Tutti");["#ftr","#gtr"].forEach(s=>{const el=$(s);el.dataset.v="";const items=[["","Tutti"]].concat(trLabels.map(x=>[x,x]));
+ el.innerHTML=items.map(([v,l])=>`<button type="button" data-v="${esc(v)}" class="${v===""?"on":""}">${esc(l)}${v?` <small>${cars.filter(c=>c.tr===v).length}</small>`:""}</button>`).join("");
+ el.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;el.dataset.v=b.dataset.v;el.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));el.dispatchEvent(new Event("input"))})});
+$("#sub").textContent=cars.length+" auto · "+cars.filter(c=>c.mg).length+" con magnete · "+cars.filter(c=>c.teca).length+" in teca · copia dati del "+D.date;
+function trOk(c,t,adj){if(!t)return 1;const n=t==='99 KO'?99:parseInt(t);if(c.trn==null)return 0;if(c.trn===n)return 1;return adj&&n<99&&c.trn<99&&Math.abs(c.trn-n)===1?1:0}
+function match(c,f){
+ if(!trOk(c,f.tr,f.adj))return 0;
+ if(f.q){const h=(c.n+" "+c.mk+" "+c.pil+" "+c.col+" "+c.sub+" "+c.gm+" "+c.num).toLowerCase();if(!f.q.toLowerCase().split(/\s+/).every(w=>h.includes(w)))return 0}
+ if(f.cl&&c.cat!==f.cl)return 0;if(f.cls&&f.cls.length&&!f.cls.includes(c.cl))return 0;if(f.mk&&c.mk!==f.mk)return 0;
+ if(f.mg!==""&&f.mg!==undefined&&String(c.mg)!==f.mg)return 0;
+ if(f.te!==undefined&&f.te!==""&&String(c.teca)!==f.te)return 0;if(f.mo&&!c.mo.includes(f.mo))return 0;
+ if(f.r1&&!(c.rpm&&c.rpm>=f.r1))return 0;if(f.r2&&!(c.rpm&&c.rpm<=f.r2))return 0;return 1}
 
-// ── Taxonomy ──────────────────────────────────────────────────────────────────
-const TAXONOMY = [
-  { id:'gt',  name:'GT Le Mans', icon:'🏁', vars:'--cat-gt',  classes:[
-    "GT Storiche - Anni '60-'80",
-    "GT1 - Anni '90-2000",
-    "GT Moderne '00 (gt2,gte,gt3, lmp)",
-    "Group C - Anni '80-'90",
-  ]},
-  { id:'f1',  name:'Formula 1',  icon:'🔴', vars:'--cat-f1',  classes:[
-    "F1 - Anni '50-'60",
-    "F1 - Anni '70-'80",
-    "F1 - Anni '80-'90",
-    "F1 - Anni '90-'10",
-    "F1 - Anni '2020",
-  ]},
-  { id:'str', name:'Stradali',   icon:'🚗', vars:'--cat-str', classes:[
-    "Trans-Am - Anni '60-'70",
-    "Caterham 7 - Anni '60-'80",
-    "Beetle - Anni '70-'00",
-    "Mini Challenge - Anni '90-'00",
-    "Sportive e Supercars",
-    "Mini - Anni '00-'10",
-  ]},
-  { id:'wrc', name:'WRC',        icon:'🌲', vars:'--cat-wrc', classes:["Rally WRC - Anni '90-'00"]},
-  { id:'nas', name:'NASCAR',     icon:'🏟', vars:'--cat-nas', classes:["Nascar - Anni '90-'00"]},
-  { id:'kar', name:'Kart',       icon:'🎯', vars:'--cat-kar', classes:['Go Kart']},
-];
-
-const CAT_BY_ID  = Object.fromEntries(TAXONOMY.map(c => [c.id, c]));
-const CAT_BY_CLS = {};
-TAXONOMY.forEach(cat => cat.classes.forEach(cls => CAT_BY_CLS[cls] = cat));
-
-// ── State ─────────────────────────────────────────────────────────────────────
-let state = {
-  view: 'home',
-  catId: null,
-  cls: null,
-  carIdx: null,
-  search: '',
-  filterMag: 'all',      // 'all' | 'yes' | 'no'
-  filterTR: new Set(),   // empty = tutti
-};
-
-// ── Render ────────────────────────────────────────────────────────────────────
-const content     = document.getElementById('content');
-const headerInner = document.getElementById('header-inner');
-const searchWrap  = document.getElementById('search-wrap');
-const searchInput = document.getElementById('search-input');
-
-const TR_ORDER = ['16T','17T','18T','19T','20T','21T','22T','23T','24T','25T','26-30','99 KO'];
-function trRank(tr) {
-  const i = TR_ORDER.indexOf(tr);
-  return i >= 0 ? i : TR_ORDER.length;
+// secondo livello: classi della categoria scelta (selezione multipla, nessuna = tutte)
+function buildSc(p){
+ const cat=$("#"+p+"cl").value,w=$("#"+p+"scw"),el=$("#"+p+"sc");
+ el.dataset.v="";
+ const ks=cat?ORD.filter(k=>cars.some(c=>c.cat===cat&&c.cl===k)):[];
+ if(ks.length<2){w.classList.add("hide");el.innerHTML="";return}
+ w.classList.remove("hide");
+ $("#"+p+"sct").textContent="Classi di "+cat+" – scegline una o più (nessuna = tutte)";
+ el.innerHTML=`<button type="button" data-v="" class="on">Tutte <small>${cars.filter(c=>c.cat===cat).length}</small></button>`+ks.map(k=>`<button type="button" data-v="${k}">${esc(CL[k])} <small>${cars.filter(c=>c.cl===k).length}</small></button>`).join("");
 }
-function carSort(a, b) {
-  const t = trRank(a.tr) - trRank(b.tr);
-  if (t !== 0) return t;
-  const br = a.brand.localeCompare(b.brand, 'it');
-  if (br !== 0) return br;
-  return a.name.localeCompare(b.name, 'it');
-}
-function carsByClass(cls) {
-  return CARS.filter(c => c.sottoclasse === cls).sort(carSort);
-}
-function catCss(cat) {
-  return `style="--c-bg:var(${cat.vars}-bg,transparent);--c-fg:var(${cat.vars}-fg)"`;
-}
+["f","g"].forEach(p=>{const el=$("#"+p+"sc");
+ el.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+  let sel=el.dataset.v?el.dataset.v.split(","):[];
+  if(b.dataset.v==="")sel=[];else sel=sel.includes(b.dataset.v)?sel.filter(x=>x!==b.dataset.v):sel.concat(b.dataset.v);
+  el.dataset.v=sel.join(",");
+  el.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x.dataset.v===""?!sel.length:sel.includes(x.dataset.v)));
+  el.dispatchEvent(new Event("input"))});
+ $("#"+p+"cl").addEventListener("input",()=>buildSc(p))});
+const getCls=p=>{const v=$("#"+p+"sc").dataset.v;return v?v.split(","):[]};
+function row(c){return `<div class="car" data-id="${c.id}"><div><b>${esc(c.n)}${c.num!=null?" #"+c.num:""}</b><span>${esc(c.mk)} · ${esc(CL[c.cl])}</span>${c.col?`<span style="color:var(--ink)">🎨 ${esc(c.col.trim().replace(/^./,m=>m.toUpperCase()))}</span>`:''}<div>${c.mg?'<span class="tag m">magnete</span>':''}${c.teca?'<span class="tag">teca</span>':''}${c.tr?`<span class="tag">TR ${esc(c.tr)}</span>`:''}${c.rpm?`<span class="tag">${c.rpm} rpm</span>`:''}${c.gm?`<span class="tag">⌀ ${esc(c.gm)}</span>`:''}</div></div><span>›</span></div>`}
+const trKey=c=>c.trn==null?999:c.trn;
+function byTR(a,b){return trKey(a)-trKey(b)||a.n.localeCompare(b.n)}
+function renderList(){
+ const f={q:$("#q").value.trim(),cl:$("#fcl").value,mk:$("#fmk").value,mg:$("#fmg").value,tr:$("#ftr").dataset.v||"",adj:$("#fadj").checked,cls:getCls("f"),te:$("#fte").value};
+ let r=cars.filter(c=>match(c,f)); r.sort(byTR);
+ $("#cnt").textContent=r.length+" auto";$("#list").innerHTML=r.map(row).join("")}
+["#q","#fcl","#fsc","#fmk","#fmg","#fte","#ftr","#fadj"].forEach(s=>$(s).addEventListener("input",renderList));
+function open_(id){const c=cars.find(x=>x.id===id);
+ const kv=[["Classe",CL[c.cl]],["Produttore",c.mk],["TR",c.tr],["Magnete",c.mg?"Sì":"No"],["Teca",c.teca?"Sì":"No"],["Epoca",c.pe.map(e=>"'"+e).join(", ")],["Anno",c.yr],["Sottoclasse",c.sub],["Colore",c.col],["Piloti",c.pil],["Numero",c.num],["Gomme (mm)",c.gm],["Gomme collegate",c.ty.join("; ")],["Motore",c.mo.join("; ")],["Giri/min",c.rpm],["Rapporto",c.rap],["Luci",c.luci?"Sì":""]].filter(x=>x[1]!==""&&x[1]!=null);
+ $("#shc").innerHTML=`<h2 style="margin-top:0">${esc(c.n)}</h2><div class="kv">${kv.map(x=>`<i>${x[0]}</i><span>${esc(x[1])}</span>`).join("")}</div><a class="btn" target="_blank" href="https://airtable.com/appbHGdDaomNZ7D8Z/tbl32CYHxtHhIczl4/rec${c.id}">Apri in Airtable (foto)</a><button class="btn" style="background:var(--line);color:var(--ink)" id="cl">Chiudi</button>`;
+ $("#sh").classList.add("on");$("#cl").onclick=()=>$("#sh").classList.remove("on")}
+document.addEventListener("click",e=>{const el=e.target.closest(".car");if(el)open_(el.dataset.id);if(e.target.id==="sh")$("#sh").classList.remove("on")});
+// stats
+function stats(){
+ const tot=cars.length,mg=cars.filter(c=>c.mg).length;
+ const rp=cars.filter(c=>c.rpm).map(c=>c.rpm);
+ let h=`<div class="kpis"><div class="kpi"><b>${tot}</b><span>auto</span></div><div class="kpi"><b>${mg}</b><span>con magnete</span></div><div class="kpi"><b>${tot-mg}</b><span>senza</span></div><div class="kpi"><b>${Math.round(100*mg/tot)}%</b><span>magnete</span></div></div>`;
+ h+=`<h2>Per classe</h2><table><tr><th>Classe</th><th>Auto</th><th>Con</th><th>Senza</th></tr>`+ORD.filter(k=>cars.some(c=>c.cl===k)).map(k=>{const a=cars.filter(c=>c.cl===k),m=a.filter(c=>c.mg).length;return `<tr><td>${CL[k]}<div class="bar"><i style="width:${100*m/a.length}%"></i></div></td><td>${a.length}</td><td>${m}</td><td>${a.length-m}</td></tr>`}).join("")+`<tfoot><tr><td>Totale</td><td>${tot}</td><td>${mg}</td><td>${tot-mg}</td></tr></tfoot></table>`;
+ const grp=(title,key)=>{const m={};cars.forEach(c=>{const ks=Array.isArray(key(c))?key(c):[key(c)];ks.forEach(k=>{if(k===""||k==null)return;m[k]=(m[k]||0)+1})});return `<h2>${title}</h2><table>`+Object.entries(m).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<tr><td>${esc(k)}</td><td>${v}</td></tr>`).join("")+`</table>`};
+ h+=grp("Per TR",c=>c.tr?"TR "+c.tr:"")+grp("Per produttore",c=>c.mk)+grp("Per epoca",c=>c.pe.map(e=>"Anni '"+e))+grp("Per motore",c=>c.mo);
+ const lt={};cars.forEach(c=>{const k=c.dia?c.dia.toFixed(1):"n/d";lt[k]=(lt[k]||0)+1});
+ h+=`<h2>Per diametro gomma (mm)</h2><table>`+Object.entries(lt).sort((a,b)=>parseFloat(a[0])-parseFloat(b[0])).map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join("")+`</table>`;
+ h+=`<h2>Giri/min motore</h2><div class="hint">${rp.length} auto con dato · min ${Math.min(...rp)} · max ${Math.max(...rp)} · media ${Math.round(rp.reduce((a,b)=>a+b,0)/rp.length)}</div>`;
+ $("#t-stat").innerHTML=h}
+// gare
+function homog(a){ // 0-100
+ let s=100;const n=a.length;
+ const cls=new Set(a.map(c=>c.cl)).size;s-=(cls-1)*8;
+ const mg=a.filter(c=>c.mg).length;const mm=Math.min(mg,n-mg)/n;s-=mm*30;
+ const rp=a.filter(c=>c.rpm).map(c=>c.rpm);if(rp.length>2){const sp=(Math.max(...rp)-Math.min(...rp));s-=Math.min(25,sp/400)}
+ const d=a.filter(c=>c.dia).map(c=>c.dia);if(d.length>2){s-=Math.min(15,(Math.max(...d)-Math.min(...d))*4)}
+ const tn=a.filter(c=>c.trn&&c.trn<99).map(c=>c.trn);if(tn.length>1)s-=Math.min(15,(Math.max(...tn)-Math.min(...tn))*3);
+ const ep=new Set(a.map(c=>c.era)).size;s-=(ep-1)*4;
+ return Math.max(0,Math.round(s))}
+const scCls=s=>s>=75?"":s>=55?"mid":"low";
+function gareRes(){
+ const f={cl:$("#gcl").value,cls:getCls("g"),mg:$("#gmg").value,mk:$("#gmk").value,mo:$("#gmo").value,tr:$("#gtr").dataset.v||"",adj:$("#gadj").checked,r1:+$("#gr1").value||0,r2:+$("#gr2").value||0};
+ const r=cars.filter(c=>match(c,f));
+ if(!r.length){$("#gres").innerHTML=`<div class="sug">Nessuna auto con questi filtri.</div>`;return}
+ const rp=r.filter(c=>c.rpm).map(c=>c.rpm),h=homog(r);
+ $("#gres").innerHTML=`<div class="sug"><b>${r.length} auto · omogeneità <span class="sc ${scCls(h)}">${h}/100</span></b><span class="hint">${rp.length?`giri ${Math.min(...rp)}–${Math.max(...rp)} · `:""}${r.filter(c=>c.mg).length} con magnete · ${new Set(r.map(c=>c.mk)).size} produttori</span></div>`+r.sort((a,b)=>trKey(a)-trKey(b)||(a.rpm||0)-(b.rpm||0)).map(row).join("")}
+["#gcl","#gsc","#gmg","#gmk","#gmo","#gr1","#gr2","#gtr","#gadj"].forEach(s=>$(s).addEventListener("input",gareRes));
+function suggest(){
+ const out=[],seen=new Set();
+ const add=(label,a,set)=>{if(a.length<4)return;const k=a.map(c=>c.id).sort().join();if(seen.has(k))return;seen.add(k);out.push({label,a,h:homog(a),set})};
+ ORD.forEach(k=>{const a=cars.filter(c=>c.cl===k);if(!a.length)return;
+  const m=a.filter(c=>c.mg),s=a.filter(c=>!c.mg);
+  add(CL[k]+" · con magnete",m,{cl:k,mg:"1"});add(CL[k]+" · senza magnete",s,{cl:k,mg:"0"});add(CL[k]+" · tutte",a,{cl:k});
+  const mos=uniq(a.flatMap(c=>c.mo));mos.forEach(mo=>add(CL[k]+" · motore "+mo,a.filter(c=>c.mo.includes(mo)),{cl:k,mo}))});
+ // classi affini per epoca
+ const groups={"GT classiche + Group C":["GS","GC"],"GT moderne + GT1":["GM","GT1"],"Formula 1 anni '70-'00":["F7","F8","F9"],"Turismo/Mini":["MI","MC","BE"]};
+ Object.entries(groups).forEach(([l,ks])=>{[1,0].forEach(m=>add(l+(m?" · con magnete":" · senza magnete"),cars.filter(c=>ks.includes(c.cl)&&c.mg===m),{cls:ks,mg:String(m)}))});
+ trLabels.filter(x=>x!=='99 KO').forEach(x=>{[[0,''],[1,' + adiacenti']].forEach(([adj,s])=>[1,0].forEach(m=>add(`TR ${x}${s} · ${m?'con':'senza'} magnete`,cars.filter(c=>trOk(c,x,adj)&&c.mg===m),{tr:x,adj})))});
 
-// Apply magnet + TR filters to a car array
-function applyFilters(arr) {
-  return arr.filter(c => {
-    if (state.filterMag === 'yes' && !c.magnete) return false;
-    if (state.filterMag === 'no'  &&  c.magnete) return false;
-    if (state.filterTR.size > 0 && !state.filterTR.has(c.tr||'')) return false;
-    return true;
-  });
-}
-
-function render() {
-  const { view, catId, cls, carIdx, search } = state;
-
-  // Header
-  if (view === 'home' || view === 'search') {
-    headerInner.innerHTML = `<span class="header-logo">Riallywood</span>`;
-    searchWrap.hidden = false;
-    updateFilterChips();
-  } else if (view === 'classes') {
-    const cat = CAT_BY_ID[catId];
-    headerInner.innerHTML = `
-      <button class="back-btn" onclick="nav('home')">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-          <path d="M10 3L5 8l5 5"/>
-        </svg>
-        Home
-      </button>
-      <span class="header-title">${cat.name}</span>`;
-    searchWrap.hidden = true;
-  } else if (view === 'cars') {
-    const cat = CAT_BY_CLS[cls];
-    headerInner.innerHTML = `
-      <button class="back-btn" onclick="nav('classes','${cat.id}')">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-          <path d="M10 3L5 8l5 5"/>
-        </svg>
-        ${cat.name}
-      </button>
-      <span class="header-title">${cls.split(' - ')[0]}</span>`;
-    searchWrap.hidden = true;
-  } else if (view === 'car') {
-    const car = CARS[carIdx];
-    headerInner.innerHTML = `
-      <button class="back-btn" onclick="navToCarClass(${carIdx})">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-          <path d="M10 3L5 8l5 5"/>
-        </svg>
-        ${(car.sottoclasse||'').split(' - ')[0]}
-      </button>`;
-    searchWrap.hidden = true;
-  }
-
-  // Content
-  if (view === 'home' || view === 'search') {
-    if (search.trim().length > 1) {
-      renderSearch(search);
-    } else {
-      renderHome();
-    }
-  } else if (view === 'classes') {
-    renderClasses(catId);
-  } else if (view === 'cars') {
-    renderCars(cls);
-  } else if (view === 'car') {
-    renderCar(carIdx);
-  }
-}
-
-function updateFilterChips() {
-  // Magnete chips
-  document.querySelectorAll('#mag-chips .chip').forEach(chip => {
-    const val = chip.dataset.mag;
-    chip.className = 'chip' + (val === state.filterMag ? ' active-mag' : '');
-  });
-  // TR chips
-  document.querySelectorAll('#tr-chips .chip').forEach(chip => {
-    const val = chip.dataset.tr;
-    if (val === 'all') {
-      chip.className = 'chip' + (state.filterTR.size === 0 ? ' active' : '');
-    } else {
-      chip.className = 'chip' + (state.filterTR.has(val) ? ' active' : '');
-    }
-  });
-}
-
-function renderHome() {
-  let html = `<div class="cat-grid">`;
-  TAXONOMY.forEach(cat => {
-    const allInCat = CARS.filter(c => cat.classes.includes(c.sottoclasse));
-    const filtered = applyFilters(allInCat);
-    const total = allInCat.length;
-    html += `
-      <div class="cat-card" ${catCss(cat)} onclick="nav('classes','${cat.id}')">
-        <span class="cat-icon">${cat.icon}</span>
-        <div class="cat-name">${cat.name}</div>
-        <div class="cat-count">${filtered.length}${filtered.length!==total?'/'+total:''} auto</div>
-      </div>`;
-  });
-  html += `</div>`;
-  content.innerHTML = html;
-}
-
-// Registro globale cls→indice per evitare problemi con apostrofi negli onclick inline
-const CLS_INDEX = {};
-TAXONOMY.forEach(cat => cat.classes.forEach((cls, i) => CLS_INDEX[cls] = cls));
-
-function renderClasses(catId) {
-  const cat = CAT_BY_ID[catId];
-  // Salvo le classi in un array globale temporaneo accessibile dagli onclick
-  window.__clsMap = window.__clsMap || {};
-  let html = `<div class="cls-list">`;
-  cat.classes.forEach((cls, i) => {
-    const allCars = carsByClass(cls);
-    if (!allCars.length) return;
-    const filtered = applyFilters(allCars);
-    const key = catId + '_' + i;
-    window.__clsMap[key] = cls;
-    const countStr = filtered.length !== allCars.length
-      ? `${filtered.length}/${allCars.length}`
-      : `${allCars.length}`;
-    html += `
-      <div class="cls-item" onclick="navCls('${key}')">
-        <span class="cls-name">${cls}</span>
-        <div class="cls-meta">
-          <span class="cls-count">${countStr}</span>
-          <span class="cls-arrow">›</span>
-        </div>
-      </div>`;
-  });
-  html += `</div>`;
-  content.innerHTML = html;
-}
-
-function renderCars(cls) {
-  const allCars = carsByClass(cls);
-  const cars = applyFilters(allCars);
-  const countLabel = cars.length < allCars.length ? `${cars.length} di ${allCars.length} auto` : `${cars.length} auto`;
-  let html = `<div class="count-bar">${countLabel}</div><div class="car-list">`;
-  cars.forEach(car => {
-    const idx = CARS.indexOf(car);
-    const dotColor = car.magnete ? '#e53535' : '#3b82f6';
-    html += `
-      <div class="car-item" onclick="nav('car','','',${idx})">
-        <span class="car-mag-dot" style="background:${dotColor}" title="${car.magnete?'Con magnete':'Senza magnete'}"></span>
-        <div class="car-info">
-          <div class="car-name">${car.name}</div>
-          <div class="car-brand">${car.brand}</div>
-        </div>
-        <span class="car-tr">${car.tr||'—'}</span>
-        <span class="car-arrow">›</span>
-      </div>`;
-  });
-  html += `</div>`;
-  content.innerHTML = html;
-}
-
-function carPhotoSvg(car, cat) {
-  const catId = cat.id || 'gt';
-  const shapes = {
-    gt:  `<ellipse cx="200" cy="110" rx="140" ry="38" fill="currentColor" opacity=".18"/>
-          <path d="M80 110 Q100 72 160 66 Q200 60 240 66 Q300 72 320 110 Z" fill="currentColor" opacity=".55"/>
-          <rect x="72" y="108" width="256" height="22" rx="6" fill="currentColor" opacity=".7"/>
-          <circle cx="118" cy="134" r="18" fill="none" stroke="currentColor" stroke-width="6" opacity=".8"/>
-          <circle cx="282" cy="134" r="18" fill="none" stroke="currentColor" stroke-width="6" opacity=".8"/>
-          <circle cx="118" cy="134" r="8" fill="currentColor" opacity=".4"/>
-          <circle cx="282" cy="134" r="8" fill="currentColor" opacity=".4"/>`,
-    f1:  `<ellipse cx="200" cy="115" rx="150" ry="22" fill="currentColor" opacity=".15"/>
-          <path d="M60 115 Q80 88 130 82 L200 78 L270 82 Q320 88 340 115 Z" fill="currentColor" opacity=".5"/>
-          <rect x="55" y="113" width="290" height="14" rx="4" fill="currentColor" opacity=".75"/>
-          <rect x="140" y="78" width="120" height="28" rx="4" fill="currentColor" opacity=".3"/>
-          <circle cx="105" cy="130" r="16" fill="none" stroke="currentColor" stroke-width="5" opacity=".8"/>
-          <circle cx="295" cy="130" r="16" fill="none" stroke="currentColor" stroke-width="5" opacity=".8"/>
-          <path d="M50 108 L60 115 M340 115 L350 108" stroke="currentColor" stroke-width="8" stroke-linecap="round" opacity=".6"/>`,
-    str: `<ellipse cx="200" cy="112" rx="135" ry="34" fill="currentColor" opacity=".16"/>
-          <path d="M85 112 Q110 80 160 72 L200 70 L240 72 Q290 80 315 112 Z" fill="currentColor" opacity=".5"/>
-          <rect x="78" y="110" width="244" height="20" rx="5" fill="currentColor" opacity=".72"/>
-          <circle cx="122" cy="133" r="17" fill="none" stroke="currentColor" stroke-width="5" opacity=".8"/>
-          <circle cx="278" cy="133" r="17" fill="none" stroke="currentColor" stroke-width="5" opacity=".8"/>`,
-    wrc: `<ellipse cx="200" cy="112" rx="130" ry="32" fill="currentColor" opacity=".16"/>
-          <path d="M90 112 Q112 80 160 74 L200 72 L240 74 Q288 80 310 112 Z" fill="currentColor" opacity=".5"/>
-          <rect x="82" y="110" width="236" height="20" rx="4" fill="currentColor" opacity=".7"/>
-          <rect x="92" y="96" width="216" height="6" rx="3" fill="currentColor" opacity=".25"/>
-          <circle cx="126" cy="133" r="16" fill="none" stroke="currentColor" stroke-width="5" opacity=".8"/>
-          <circle cx="274" cy="133" r="16" fill="none" stroke="currentColor" stroke-width="5" opacity=".8"/>`,
-    nas: `<ellipse cx="200" cy="113" rx="145" ry="36" fill="currentColor" opacity=".14"/>
-          <path d="M75 113 Q95 76 155 68 L200 66 L245 68 Q305 76 325 113 Z" fill="currentColor" opacity=".48"/>
-          <rect x="68" y="111" width="264" height="24" rx="4" fill="currentColor" opacity=".7"/>
-          <circle cx="115" cy="138" r="19" fill="none" stroke="currentColor" stroke-width="6" opacity=".8"/>
-          <circle cx="285" cy="138" r="19" fill="none" stroke="currentColor" stroke-width="6" opacity=".8"/>`,
-    kar: `<ellipse cx="200" cy="120" rx="110" ry="22" fill="currentColor" opacity=".16"/>
-          <rect x="110" y="100" width="180" height="18" rx="4" fill="currentColor" opacity=".55"/>
-          <rect x="90" y="116" width="220" height="12" rx="3" fill="currentColor" opacity=".7"/>
-          <circle cx="120" cy="132" r="14" fill="none" stroke="currentColor" stroke-width="5" opacity=".8"/>
-          <circle cx="280" cy="132" r="14" fill="none" stroke="currentColor" stroke-width="5" opacity=".8"/>
-          <rect x="186" y="96" width="28" height="6" rx="3" fill="currentColor" opacity=".4"/>`,
-  };
-  const shape = shapes[catId] || shapes.gt;
-  const colorVar = cat.vars ? `var(${cat.vars}-fg)` : 'var(--fg2)';
-  const bgVar    = cat.vars ? `var(${cat.vars})` : 'var(--bg3)';
-  return `
-    <div class="car-photo-wrap" style="background:${bgVar}">
-      <svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg"
-           style="width:100%;height:100%;color:${colorVar}">
-        ${shape}
-        <text x="200" y="170" text-anchor="middle" font-family="'Barlow Condensed',sans-serif"
-              font-size="11" font-weight="600" letter-spacing="2" fill="currentColor" opacity=".35"
-              text-transform="uppercase">${car.brand.toUpperCase()}</text>
-      </svg>
-    </div>`;
-}
-
-function renderCar(idx) {
-  const car = CARS[idx];
-  const cat = CAT_BY_CLS[car.sottoclasse] || {};
-  const catCssStr = cat.vars ? `style="--c-fg:var(${cat.vars}-fg)"` : '';
-  const magColor = car.magnete ? '#e53535' : '#3b82f6';
-  const gomme = (car.gomma_diam && car.gomma_larg)
-    ? `⌀ ${car.gomma_diam} mm · L ${car.gomma_larg} mm`
-    : car.gomma_diam ? `⌀ ${car.gomma_diam} mm` : '—';
-  const html = `
-    <div class="car-detail">
-      <div class="car-detail-hero">
-        <div class="car-detail-name">${car.name}</div>
-        <div class="car-detail-brand">${car.brand}</div>
-        <div class="badge-row">
-          <span class="badge" style="background:${magColor};color:#fff">${car.magnete ? 'Con magnete' : 'Senza magnete'}</span>
-          ${car.tr ? `<span class="badge badge-tr">${car.tr}</span>` : ''}
-          ${car.sottoclasse ? `<span class="badge badge-cls" ${catCssStr}>${car.sottoclasse}</span>` : ''}
-        </div>
-      </div>
-      <div class="detail-section">
-        <div class="detail-row">
-          <span class="detail-label">Produttore</span>
-          <span class="detail-value">${car.brand}</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Classe</span>
-          <span class="detail-value">${car.sottoclasse||'—'}</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Categoria</span>
-          <span class="detail-value">${cat.name||'—'}</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Pignone (TR)</span>
-          <span class="detail-value">${car.tr||'—'}</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Magnete</span>
-          <span class="detail-value" style="color:${magColor};font-weight:600">
-            ${car.magnete ? '● Sì' : '● No'}
-          </span>
-        </div>
-        ${car.anno ? `<div class="detail-row">
-          <span class="detail-label">Anno</span>
-          <span class="detail-value">${car.anno}</span>
-        </div>` : ''}
-        <div class="detail-row">
-          <span class="detail-label">Gomme</span>
-          <span class="detail-value">${gomme}</span>
-        </div>
-      </div>
-    </div>`;
-  content.innerHTML = html;
-}
-
-function renderSearch(q) {
-  const lq = q.toLowerCase();
-  let results = CARS.filter(c =>
-    c.name.toLowerCase().includes(lq) ||
-    c.brand.toLowerCase().includes(lq) ||
-    (c.sottoclasse||'').toLowerCase().includes(lq)
-  );
-  results = applyFilters(results).sort((a,b) => a.name.localeCompare(b.name));
-
-  if (!results.length) {
-    content.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><div class="empty-text">Nessun risultato per "${q}"</div></div>`;
-    return;
-  }
-
-  let html = `<div class="count-bar">${results.length} risultat${results.length===1?'o':'i'}</div><div class="car-list">`;
-  results.forEach(car => {
-    const idx = CARS.indexOf(car);
-    const dotColor = car.magnete ? '#e53535' : '#3b82f6';
-    html += `
-      <div class="car-item" onclick="nav('car','','',${idx})">
-        <span class="car-mag-dot" style="background:${dotColor}"></span>
-        <div class="car-info">
-          <div class="car-name">${car.name}</div>
-          <div class="car-brand">${car.brand} · ${car.sottoclasse||'—'}</div>
-        </div>
-        <span class="car-tr">${car.tr||'—'}</span>
-        <span class="car-arrow">›</span>
-      </div>`;
-  });
-  html += `</div>`;
-  content.innerHTML = html;
-}
-
-// ── Navigation ────────────────────────────────────────────────────────────────
-function navCls(key) {
-  const cls = window.__clsMap[key];
-  if (!cls) return;
-  nav('cars', '', cls);
-}
-function navToCarClass(idx) {
-  const car = CARS[idx];
-  nav('cars', '', car.sottoclasse);
-}
-
-function nav(view, catId, cls, carIdx) {
-  state.view = view;
-  if (catId !== undefined && catId !== 'undefined' && catId !== 'null' && catId !== '') state.catId = catId;
-  if (cls !== undefined && cls !== 'undefined' && cls !== 'null') state.cls = cls ? decodeURIComponent(cls) : null;
-  if (carIdx !== undefined && carIdx !== 'undefined' && carIdx !== 'null') state.carIdx = (carIdx !== null && carIdx !== '') ? Number(carIdx) : null;
-  if (view === 'home') { state.search = ''; if (searchInput) searchInput.value = ''; }
-  content.scrollTop = 0;
-  render();
-}
-
-// ── Filter interactions ───────────────────────────────────────────────────────
-document.getElementById('mag-chips').addEventListener('click', e => {
-  const chip = e.target.closest('.chip');
-  if (!chip) return;
-  state.filterMag = chip.dataset.mag;
-  render();
-});
-
-document.getElementById('tr-chips').addEventListener('click', e => {
-  const chip = e.target.closest('.chip');
-  if (!chip) return;
-  const val = chip.dataset.tr;
-  if (val === 'all') {
-    state.filterTR.clear();
-  } else {
-    if (state.filterTR.has(val)) {
-      state.filterTR.delete(val);
-    } else {
-      state.filterTR.add(val);
-    }
-  }
-  render();
-});
-
-// Search
-searchInput.addEventListener('input', e => {
-  state.search = e.target.value;
-  state.view = state.search.trim().length > 1 ? 'search' : 'home';
-  render();
-});
-
-// ── Boot ──────────────────────────────────────────────────────────────────────
-render();
-</script>
+ out.sort((a,b)=>b.h-a.h||b.a.length-a.a.length);
+ $("#gsug").innerHTML=out.slice(0,24).map((g,i)=>`<div class="sug"><b>${esc(g.label)}</b><span class="hint">${g.a.length} auto · omogeneità <span class="sc ${scCls(g.h)}">${g.h}</span></span><br><button data-i="${i}">Vedi auto</button></div>`).join("");
+ $("#gsug").onclick=e=>{const b=e.target.closest("button");if(!b)return;const g=out[+b.dataset.i];
+  $("#shc").innerHTML=`<h2 style="margin-top:0">${esc(g.label)}</h2><div class="hint">${g.a.length} auto</div>`+g.a.sort((x,y)=>trKey(x)-trKey(y)||(x.rpm||0)-(y.rpm||0)).map(row).join("")+`<button class="btn" id="cl">Chiudi</button>`;$("#sh").classList.add("on");$("#cl").onclick=()=>$("#sh").classList.remove("on")}}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));["auto","stat","gare"].forEach(t=>$("#t-"+t).classList.toggle("hide",t!==b.dataset.t));scrollTo(0,0)});
+renderList();stats();suggest();gareRes();
+</script></body></html>
